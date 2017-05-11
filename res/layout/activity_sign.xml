@@ -1,0 +1,129 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#F0F3F6"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/sign_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_horizontal" >
+
+        <FrameLayout
+            android:id="@+id/sign_username_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
+            android:gravity="center" >
+
+            <!-- android:inputType="number" -->
+
+            <EditText
+                android:id="@+id/sign_username"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:maxLength="20"
+                android:paddingLeft="55dp"
+                android:paddingRight="60dp" >
+            </EditText>
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="21dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/username"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/sign_bt_username_clear"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/delete"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/sign_usercode_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sign_username_layout"
+            android:layout_marginTop="6dp"
+            android:gravity="center" >
+
+            <EditText
+                android:id="@+id/sign_password"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:paddingLeft="55dp"
+                android:paddingRight="60dp" >
+            </EditText>
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="21dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/password" />
+
+            <Button
+                android:id="@+id/sign_bt_pwd_eye"
+                android:layout_width="28dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/eye" />
+
+            <Button
+                android:id="@+id/sign_bt_pwd_clear"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="45dp"
+                android:background="@drawable/delete"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/sign_register"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/sign_usercode_layout"
+            android:layout_marginTop="30dp"
+            android:background="#00C5CD"
+            android:gravity="center"
+            android:text="注册"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/sign_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/sign_register"
+            android:layout_below="@id/sign_register"
+            android:layout_marginTop="10dp"
+            android:background="#00000000"
+            android:gravity="left|center_vertical"
+            android:text="登陆"
+            android:textSize="16sp"
+            android:visibility="visible" />
+
+        <TextView
+            style="@style/usertext"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:textSize="20sp"
+            android:text="注册" />
+    </RelativeLayout>
+
+</RelativeLayout>
