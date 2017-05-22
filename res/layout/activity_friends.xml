@@ -11,5 +11,13 @@
         android:layout_marginTop="5dp"
         android:text="好友"
         android:textSize="20sp" />
+    
+    <TextView
+        style="@style/usertext"
+        android:id="@+id/httptest"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:text="1"
+        android:textSize="20sp" />
 
 </RelativeLayout>

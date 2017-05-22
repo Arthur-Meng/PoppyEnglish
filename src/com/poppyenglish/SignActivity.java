@@ -1,5 +1,15 @@
 package com.poppyenglish;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import android.annotation.TargetApi;
@@ -7,6 +17,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.text.Editable;
@@ -33,35 +45,53 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SignActivity extends Activity implements Button.OnClickListener{
-	private EditText sign_username, sign_password;
+public class SignActivity extends Activity implements Button.OnClickListener {
+	private EditText sign_username, sign_password, sign_text;
 	private Button sign_bt_username_clear;
+	private Button sign_bt_username_get;
 	private Button sign_bt_pwd_clear;
 	private Button sign_bt_pwd_eye;
 	private Button sign_login;
 	private Button sign_register;
 	private boolean sign_isOpen = false;
+	String user;
+	String pwd;
+	String code;
+	String result;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sign);
-		
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTranslucentStatus(true);
 		}
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
-		tintManager.setStatusBarTintResource(R.color.mywhite);//通知栏所需颜色
+		tintManager.setStatusBarTintResource(R.color.mywhite);// 通知栏所需颜色
 		initSignView();
 	}
 
 	private void initSignView() {
 		sign_username = (EditText) findViewById(R.id.sign_username);
+		sign_text = (EditText) findViewById(R.id.sign_text);
+		sign_username.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					// 获得焦点
+					sign_bt_username_clear.setVisibility(View.VISIBLE);
+				} else {
+					// 失去焦点
+					sign_bt_username_clear.setVisibility(View.INVISIBLE);
+				}
+			}
+		});
 		sign_username.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				String user = sign_username.getText().toString().trim();
+				user = sign_username.getText().toString().trim();
 				if ("".equals(user)) {
 					sign_bt_username_clear.setVisibility(View.INVISIBLE);
 				} else {
@@ -101,14 +131,15 @@ public class SignActivity extends Activity implements Button.OnClickListener{
 		sign_bt_username_clear.setOnClickListener(this);
 		sign_bt_pwd_clear = (Button) findViewById(R.id.sign_bt_pwd_clear);
 		sign_bt_pwd_clear.setOnClickListener(this);
-
+		sign_bt_username_get = (Button) findViewById(R.id.sign_bt_username_get);
+		sign_bt_username_get.setOnClickListener(this);
 		sign_bt_pwd_eye = (Button) findViewById(R.id.sign_bt_pwd_eye);
 		sign_bt_pwd_eye.setOnClickListener(this);
 		sign_login = (Button) findViewById(R.id.sign_login);
 		sign_login.setOnClickListener(this);
 		sign_register = (Button) findViewById(R.id.sign_register);
 		sign_register.setOnClickListener(this);
-		
+
 	}
 
 	public void onClick(View v) {
@@ -118,6 +149,65 @@ public class SignActivity extends Activity implements Button.OnClickListener{
 			break;
 		case R.id.sign_bt_pwd_clear:
 			sign_password.setText("");
+			break;
+		case R.id.sign_bt_username_get:
+			if (isChinaPhoneLegal(user)) {
+				new Thread() {
+					// 采用get方式访问J2EE服务器
+					String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/sign?tel=" + user;
+					URL url = null;
+
+					public void run() {
+						try {
+							url = new URL(strUrl);
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error1");
+							e.printStackTrace();
+						}
+						HttpURLConnection httpURLConnection = null;
+						try {
+							httpURLConnection = (HttpURLConnection) url.openConnection();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error2");
+							e.printStackTrace();
+						}
+						InputStreamReader inputStreamReader = null;
+						try {
+							inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error3");
+							e.printStackTrace();
+						}
+						BufferedReader buff = new BufferedReader(inputStreamReader);
+						result = "";
+						String readLine = null;
+						try {
+							while ((readLine = buff.readLine()) != null) {
+								result += readLine;
+							}
+							System.out.println("myhttptestlog-" + result);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error4");
+							e.printStackTrace();
+						}
+						try {
+							inputStreamReader.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error5");
+							e.printStackTrace();
+						}
+						httpURLConnection.disconnect();
+						handler.sendEmptyMessage(0x123);
+					};
+				}.start();
+			} else {
+				Toast.makeText(SignActivity.this, "请输入正确的电话号码", 0).show();
+			}
 			break;
 		case R.id.sign_bt_pwd_eye:
 			if (sign_isOpen) {
@@ -132,7 +222,71 @@ public class SignActivity extends Activity implements Button.OnClickListener{
 			startActivity(toLogin);
 			break;
 		case R.id.sign_register:
-			// ע�ᰴť
+			code = sign_text.getText().toString().trim();
+			System.out.println("log" + code);
+			if (!user.equals("") && !code.equals("") && !pwd.equals("")) {
+				new Thread() {
+					// 采用get方式访问J2EE服务器
+					String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/sign?tel=" + user + "&" + "validate=" + code
+							+ "&" + "password=" + pwd;
+					URL url = null;
+
+					public void run() {
+
+						try {
+							url = new URL(strUrl);
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error1");
+							e.printStackTrace();
+						}
+						HttpURLConnection httpURLConnection = null;
+						try {
+							httpURLConnection = (HttpURLConnection) url.openConnection();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error2");
+							e.printStackTrace();
+						}
+						InputStreamReader inputStreamReader = null;
+						try {
+							inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error3");
+							e.printStackTrace();
+						}
+						BufferedReader buff = new BufferedReader(inputStreamReader);
+						result = "";
+						String readLine = null;
+						try {
+							while ((readLine = buff.readLine()) != null) {
+								result += readLine;
+							}
+							System.out.println("myhttptestlog-" + result);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error4");
+							e.printStackTrace();
+						}
+
+						try {
+							inputStreamReader.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							System.out.println("myhttptest-error5");
+							e.printStackTrace();
+						}
+						httpURLConnection.disconnect();
+						handler.sendEmptyMessage(0x123);
+					}
+
+					;
+				}.start();
+			} else {
+				Toast.makeText(SignActivity.this, "请填写完整的信息", 0).show();
+			}
+
 			break;
 		default:
 			break;
@@ -148,7 +302,39 @@ public class SignActivity extends Activity implements Button.OnClickListener{
 			sign_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
 		}
 	}
-	@TargetApi(19) 
+
+	Handler handler = new Handler() {
+		/**
+		 * Subclasses must implement this to receive messages.
+		 *
+		 * @param msg
+		 */
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 0x123) {
+				if (result.equals("Send")) {
+					Toast.makeText(SignActivity.this, "已发送成功，请查收", 0).show();
+				}
+				if (result.equals("Yes")) {
+					Intent toLogin = new Intent(SignActivity.this, LoginActivity.class);
+					startActivity(toLogin);
+				}
+				if (result.equals("No")) {
+					Toast.makeText(SignActivity.this, "注册失败", 0).show();
+				}
+
+			}
+		}
+	};
+
+	public static boolean isChinaPhoneLegal(String str) throws PatternSyntaxException {
+		String regExp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
+		Pattern p = Pattern.compile(regExp);
+		Matcher m = p.matcher(str);
+		return m.matches();
+	}
+
+	@TargetApi(19)
 	private void setTranslucentStatus(boolean on) {
 		Window win = getWindow();
 		WindowManager.LayoutParams winParams = win.getAttributes();

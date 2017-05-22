@@ -1,5 +1,12 @@
 package com.poppyenglish;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import android.annotation.TargetApi;
@@ -7,6 +14,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.text.Editable;
@@ -19,6 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
 
@@ -31,6 +41,9 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 	private Button login;
 	private Button register;
 	private boolean isOpen = false;
+	String user;
+	String pwd;
+	String result;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,27 +54,40 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 		}
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
-		tintManager.setStatusBarTintResource(R.color.mywhite);//通知栏所需颜色
+		tintManager.setStatusBarTintResource(R.color.mywhite);// 通知栏所需颜色
 		initView();
 	}
 
 	private void initView() {
 		username = (EditText) findViewById(R.id.username);
-		
+		username.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // 获得焦点
+                	bt_username_clear.setVisibility(View.VISIBLE);
+                } else {
+                    // 失去焦点
+                	bt_username_clear.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 		username.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-				String user = username.getText().toString().trim();
+				user = username.getText().toString().trim();
 				if ("".equals(user)) {
 					bt_username_clear.setVisibility(View.INVISIBLE);
 				} else {
 					bt_username_clear.setVisibility(View.VISIBLE);
 				}
 			}
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
+
 			@Override
 			public void afterTextChanged(Editable s) {
 			}
@@ -72,16 +98,18 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-				String pwd = password.getText().toString().trim();
+				pwd = password.getText().toString().trim();
 				if ("".equals(pwd)) {
 					bt_pwd_clear.setVisibility(View.INVISIBLE);
 				} else {
 					bt_pwd_clear.setVisibility(View.VISIBLE);
 				}
 			}
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
+
 			@Override
 			public void afterTextChanged(Editable s) {
 			}
@@ -118,8 +146,67 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 			changePwdOpenOrClose(isOpen);
 			break;
 		case R.id.login:
-			Intent toIndex = new Intent(LoginActivity.this, IndexActivity.class);
-			startActivity(toIndex);
+			
+			new Thread() {
+				// 采用get方式访问J2EE服务器
+				String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/login?tel=" + user + "&" + "password=" + pwd;
+
+				URL url = null;
+
+				public void run() {
+
+					try {
+						url = new URL(strUrl);
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						System.out.println("myhttptest-error1");
+						e.printStackTrace();
+					}
+					HttpURLConnection httpURLConnection = null;
+					try {
+						httpURLConnection = (HttpURLConnection) url.openConnection();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						System.out.println("myhttptest-error2");
+						e.printStackTrace();
+					}
+					InputStreamReader inputStreamReader = null;
+					try {
+						inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						System.out.println("myhttptest-error3");
+						e.printStackTrace();
+					}
+					BufferedReader buff = new BufferedReader(inputStreamReader);
+					result = "";
+					String readLine = null;
+					try {
+						while ((readLine = buff.readLine()) != null) {
+							result += readLine;
+						}
+						System.out.println("myhttptestlog-"+result);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						System.out.println("myhttptest-error4");
+						e.printStackTrace();
+					}
+					
+					try {
+						inputStreamReader.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						System.out.println("myhttptest-error5");
+						e.printStackTrace();
+					}
+					httpURLConnection.disconnect();
+					handler.sendEmptyMessage(0x123);
+				}
+
+				;
+			}.start();
+
+			
 			break;
 		case R.id.register:
 			Intent toSign = new Intent(LoginActivity.this, SignActivity.class);
@@ -133,6 +220,32 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 		}
 	}
 
+	Handler handler = new Handler() {
+		/**
+		 * Subclasses must implement this to receive messages.
+		 *
+		 * @param msg
+		 */
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 0x123) {
+				if (result.equals("NoUser")) {
+					Toast.makeText(LoginActivity.this, "请先注册", 0).show();
+					Intent toSign = new Intent(LoginActivity.this, SignActivity.class);
+					startActivity(toSign);
+				} else {
+					if (result.equals("Yes")) {
+						Intent toIndex = new Intent(LoginActivity.this, IndexActivity.class);
+						startActivity(toIndex);
+					}
+					if (result.equals("WrongPassword")) {
+						password.setText("");
+						Toast.makeText(LoginActivity.this, "密码错误", 0).show();
+					}
+				}
+			}
+		}
+	};
 
 	private void changePwdOpenOrClose(boolean flag) {
 
@@ -145,7 +258,7 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 		}
 	}
 
-	@TargetApi(19) 
+	@TargetApi(19)
 	private void setTranslucentStatus(boolean on) {
 		Window win = getWindow();
 		WindowManager.LayoutParams winParams = win.getAttributes();
