@@ -3,13 +3,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F3F6"
-    tools:context="${relativePackage}.${activityClass}" >
-
+	tools:context="${relativePackage}.${activityClass}" >
     <TextView
         style="@style/usertext"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:text="英语连连看"
         android:textSize="20sp" />
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+		<TextView 
+		    android:layout_height="wrap_content"
+		    android:layout_width="wrap_content"
+		    android:textColor="#030303"
+		    android:layout_marginTop="50dp"
+		    android:layout_marginLeft="50dp"
+		    android:textSize="20dp"
+		    android:text="得分："/>
+		 <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#030303"
+            android:layout_marginTop="50dp"
+		    android:textSize="20dp"
+		    android:text="0" />
+	
+		<LinearLayout 
+		    android:gravity="right"
+		    android:layout_marginTop="50dp"
+		    android:layout_marginRight="50dp"
+		    android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+	   		android:orientation="horizontal" >
+	   		<TextView
+			     android:layout_width="wrap_content"
+	             android:layout_height="wrap_content"
+	             android:textColor="#030303"
+			     android:textSize="20dp"
+			     android:text="倒计时："
+			     android:layout_gravity="right"/>
+			<TextView
+			     android:id="@+id/timeText"
+			     android:layout_width="wrap_content"
+	             android:layout_height="wrap_content"
+	             android:textColor="#030303"
+			     android:textSize="20dp"
+			     android:layout_gravity="right"/>
+		</LinearLayout>
+	</LinearLayout>
 
+	<com.poppyenglish.LockPatternView 
+	    android:id="@+id/lockPatternView"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"  />
+
+	<Button 
+	    android:id="@+id/buttonNewGame"
+	    android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+	    android:text="重置"/>
 </RelativeLayout>
+    
+

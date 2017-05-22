@@ -228,7 +228,7 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 		 */
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg.what == 0x123) {
+			if (msg.what == 0x123) {/*
 				if (result.equals("NoUser")) {
 					Toast.makeText(LoginActivity.this, "请先注册", 0).show();
 					Intent toSign = new Intent(LoginActivity.this, SignActivity.class);
@@ -243,6 +243,9 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 						Toast.makeText(LoginActivity.this, "密码错误", 0).show();
 					}
 				}
+			*/
+				Intent toIndex = new Intent(LoginActivity.this, IndexActivity.class);
+				startActivity(toIndex);
 			}
 		}
 	};
