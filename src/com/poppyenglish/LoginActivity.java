@@ -11,7 +11,11 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +37,7 @@ import android.widget.Toast;
 import android.os.Bundle;
 
 public class LoginActivity extends Activity implements Button.OnClickListener {
+	private Context context;  
 	private EditText username, password;
 	private Button bt_username_clear;
 	private Button bt_pwd_clear;
@@ -44,6 +49,7 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 	String user;
 	String pwd;
 	String result;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +67,17 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 	private void initView() {
 		username = (EditText) findViewById(R.id.username);
 		username.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    // 获得焦点
-                	bt_username_clear.setVisibility(View.VISIBLE);
-                } else {
-                    // 失去焦点
-                	bt_username_clear.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					// 获得焦点
+					bt_username_clear.setVisibility(View.VISIBLE);
+				} else {
+					// 失去焦点
+					bt_username_clear.setVisibility(View.INVISIBLE);
+				}
+			}
+		});
 		username.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -146,7 +152,7 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 			changePwdOpenOrClose(isOpen);
 			break;
 		case R.id.login:
-			
+
 			new Thread() {
 				// 采用get方式访问J2EE服务器
 				String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/login?tel=" + user + "&" + "password=" + pwd;
@@ -166,37 +172,43 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 					try {
 						httpURLConnection = (HttpURLConnection) url.openConnection();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						System.out.println("myhttptest-error2");
 						e.printStackTrace();
 					}
 					InputStreamReader inputStreamReader = null;
 					try {
 						inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						System.out.println("myhttptest-error3");
 						e.printStackTrace();
 					}
 					BufferedReader buff = new BufferedReader(inputStreamReader);
 					result = "";
+					int k = 0;
+					String[] userinfo = new String[4];
+					;
 					String readLine = null;
 					try {
 						while ((readLine = buff.readLine()) != null) {
+							userinfo[k] = readLine;
 							result += readLine;
+							k++;
 						}
-						System.out.println("myhttptestlog-"+result);
+						
+						SharedPreferences preferences = LoginActivity.this.getSharedPreferences("userinfo", MODE_PRIVATE);
+						SharedPreferences.Editor editor = preferences.edit();
+						editor.putString("tel", user);
+						editor.putString("password", pwd);
+						editor.putString("name", userinfo[0]);
+						editor.putString("gender", userinfo[1]);
+						editor.putString("honor", userinfo[2]);
+						editor.putString("comment", userinfo[3]);
+						editor.commit();
+
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						System.out.println("myhttptest-error4");
 						e.printStackTrace();
 					}
-					
 					try {
 						inputStreamReader.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						System.out.println("myhttptest-error5");
 						e.printStackTrace();
 					}
 					httpURLConnection.disconnect();
@@ -206,7 +218,6 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 				;
 			}.start();
 
-			
 			break;
 		case R.id.register:
 			Intent toSign = new Intent(LoginActivity.this, SignActivity.class);
@@ -228,24 +239,26 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 		 */
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg.what == 0x123) {/*
+			if (msg.what == 0x123) {
 				if (result.equals("NoUser")) {
 					Toast.makeText(LoginActivity.this, "请先注册", 0).show();
 					Intent toSign = new Intent(LoginActivity.this, SignActivity.class);
 					startActivity(toSign);
 				} else {
-					if (result.equals("Yes")) {
-						Intent toIndex = new Intent(LoginActivity.this, IndexActivity.class);
-						startActivity(toIndex);
-					}
 					if (result.equals("WrongPassword")) {
 						password.setText("");
 						Toast.makeText(LoginActivity.this, "密码错误", 0).show();
+					} else {
+						Intent toIndex = new Intent(LoginActivity.this, IndexActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putCharSequence("tel", user);
+						bundle.putCharSequence("password", pwd);
+						toIndex.putExtras(bundle);
+						startActivity(toIndex);
 					}
+
 				}
-			*/
-				Intent toIndex = new Intent(LoginActivity.this, IndexActivity.class);
-				startActivity(toIndex);
+
 			}
 		}
 	};

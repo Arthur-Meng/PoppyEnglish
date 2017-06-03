@@ -20,21 +20,12 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
 	private int splashTime = 2000;
-	private static final String spFileName = "sp";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.activity_main);
-		
-		SharedPreferences sp = getSharedPreferences(spFileName, Context.MODE_PRIVATE);
 
-		if (sp.getBoolean("isFirst", true)) {
-			Editor editor = sp.edit();
-			editor.putBoolean("isFirst", false);
-			editor.commit();
-		}
+		setContentView(R.layout.activity_main);
 
 	}
 
@@ -43,9 +34,32 @@ public class MainActivity extends Activity {
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				Intent intent = new Intent(MainActivity.this, StartActivity.class);
-				startActivity(intent);
-				MainActivity.this.finish();
+				SharedPreferences preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
+				
+				if (!preferences.getString("tel", "").equals("")) {
+					Bundle bundle = new Bundle();
+					bundle.putCharSequence("tel", preferences.getString("tel", ""));
+					bundle.putCharSequence("password", preferences.getString("tel", ""));
+					if (!preferences.getString("name", "").equals("")) {
+						bundle.putCharSequence("name", preferences.getString("name", ""));
+					}
+					if (!preferences.getString("gender", "").equals("")) {
+						bundle.putCharSequence("gender", preferences.getString("gender", ""));
+					}
+					if (!preferences.getString("honor", "").equals("")) {
+						bundle.putCharSequence("honor", preferences.getString("honor", ""));
+					}
+					if (preferences.getString("comment", "") != null) {
+						bundle.putCharSequence("comment", preferences.getString("comment", ""));
+					}
+					Intent intent = new Intent(MainActivity.this, IndexActivity.class);
+					intent.putExtras(bundle);
+					startActivity(intent);
+				} else {
+					Intent intent = new Intent(MainActivity.this, StartActivity.class);
+					startActivity(intent);
+					MainActivity.this.finish();
+				}
 			}
 		};
 

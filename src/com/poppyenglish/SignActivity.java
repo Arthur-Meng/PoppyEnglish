@@ -32,8 +32,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.os.Bundle;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
@@ -57,6 +55,7 @@ public class SignActivity extends Activity implements Button.OnClickListener {
 	String user;
 	String pwd;
 	String code;
+	String turecode;
 	String result;
 
 	@Override
@@ -223,66 +222,69 @@ public class SignActivity extends Activity implements Button.OnClickListener {
 			break;
 		case R.id.sign_register:
 			code = sign_text.getText().toString().trim();
+			pwd = sign_password.getText().toString().trim();
 			System.out.println("log" + code);
 			if (!user.equals("") && !code.equals("") && !pwd.equals("")) {
 				new Thread() {
 					// 采用get方式访问J2EE服务器
-					String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/sign?tel=" + user + "&" + "validate=" + code
-							+ "&" + "password=" + pwd;
+
+					String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/sign?tel=" + user + "&" + "password=" + pwd;
 					URL url = null;
 
 					public void run() {
-
-						try {
-							url = new URL(strUrl);
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							System.out.println("myhttptest-error1");
-							e.printStackTrace();
-						}
-						HttpURLConnection httpURLConnection = null;
-						try {
-							httpURLConnection = (HttpURLConnection) url.openConnection();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							System.out.println("myhttptest-error2");
-							e.printStackTrace();
-						}
-						InputStreamReader inputStreamReader = null;
-						try {
-							inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							System.out.println("myhttptest-error3");
-							e.printStackTrace();
-						}
-						BufferedReader buff = new BufferedReader(inputStreamReader);
-						result = "";
-						String readLine = null;
-						try {
-							while ((readLine = buff.readLine()) != null) {
-								result += readLine;
+						if (code.equals(turecode)) {
+							try {
+								url = new URL(strUrl);
+							} catch (MalformedURLException e) {
+								// TODO Auto-generated catch block
+								System.out.println("myhttptest-error1");
+								e.printStackTrace();
 							}
-							System.out.println("myhttptestlog-" + result);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							System.out.println("myhttptest-error4");
-							e.printStackTrace();
-						}
+							HttpURLConnection httpURLConnection = null;
+							try {
+								httpURLConnection = (HttpURLConnection) url.openConnection();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								System.out.println("myhttptest-error2");
+								e.printStackTrace();
+							}
+							InputStreamReader inputStreamReader = null;
+							try {
+								inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								System.out.println("myhttptest-error3");
+								e.printStackTrace();
+							}
+							BufferedReader buff = new BufferedReader(inputStreamReader);
+							result = "";
+							String readLine = null;
+							try {
+								while ((readLine = buff.readLine()) != null) {
+									result += readLine;
+								}
+								System.out.println("myhttptestlog-" + result);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								System.out.println("myhttptest-error4");
+								e.printStackTrace();
+							}
 
-						try {
-							inputStreamReader.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							System.out.println("myhttptest-error5");
-							e.printStackTrace();
+							try {
+								inputStreamReader.close();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								System.out.println("myhttptest-error5");
+								e.printStackTrace();
+							}
+							httpURLConnection.disconnect();
+							handler.sendEmptyMessage(0x123);
+						} else {
+							Toast.makeText(SignActivity.this, "验证码错误", 0).show();
 						}
-						httpURLConnection.disconnect();
-						handler.sendEmptyMessage(0x123);
 					}
-
-					;
 				}.start();
+
 			} else {
 				Toast.makeText(SignActivity.this, "请填写完整的信息", 0).show();
 			}
@@ -312,15 +314,16 @@ public class SignActivity extends Activity implements Button.OnClickListener {
 		@Override
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
-				if (result.equals("Send")) {
-					Toast.makeText(SignActivity.this, "已发送成功，请查收", 0).show();
-				}
 				if (result.equals("Yes")) {
 					Intent toLogin = new Intent(SignActivity.this, LoginActivity.class);
 					startActivity(toLogin);
-				}
-				if (result.equals("No")) {
+				} else if (result.equals("No")) {
 					Toast.makeText(SignActivity.this, "注册失败", 0).show();
+				} else if (result.equals("error")) {
+					Toast.makeText(SignActivity.this, "发送短信失败", 0).show();
+				}else {
+					turecode = result;
+					Toast.makeText(SignActivity.this, "已发送成功，请查收", 0).show();
 				}
 
 			}
@@ -328,7 +331,7 @@ public class SignActivity extends Activity implements Button.OnClickListener {
 	};
 
 	public static boolean isChinaPhoneLegal(String str) throws PatternSyntaxException {
-		String regExp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
+		String regExp = "^((13[0-9])|(15[^4])|(18[0,1,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
 		Pattern p = Pattern.compile(regExp);
 		Matcher m = p.matcher(str);
 		return m.matches();

@@ -1,0 +1,155 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#F0F3F6"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true" >
+
+    <TextView
+        style="@style/usertext"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="修改信息"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
+            android:orientation="horizontal" >
+
+            <!-- android:inputType="number" -->
+
+            <TextView
+                style="@style/usertext"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:text="用户名："
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="100" >
+
+                <EditText
+                    android:id="@+id/personal_newname"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="15dp"
+                    android:singleLine="true"
+                    android:textColor="#545454" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <!-- android:inputType="number" -->
+
+            <TextView
+                style="@style/usertext"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:text="密    码："
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="100" >
+
+                <EditText
+                    android:id="@+id/personal_newpassword"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="15dp"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:textColor="#545454" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <!-- android:inputType="number" -->
+
+            <TextView
+                style="@style/usertext"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:text="性    别："
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="100" >
+
+                <EditText
+                    android:id="@+id/personal_newgender"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="15dp"
+                    android:singleLine="true"
+                    android:textColor="#545454" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <!-- android:inputType="number" -->
+
+            <TextView
+                style="@style/usertext"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:text="宣    言："
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="100" >
+
+                <EditText
+                    android:id="@+id/personal_newcomment"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="15dp"
+                    android:singleLine="true"
+                    android:textColor="#545454" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/personal_newinfo"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="25dp"
+            android:background="#00C5CD"
+            android:text="保存信息"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

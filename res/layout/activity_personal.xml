@@ -34,6 +34,36 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@drawable/head" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/perosnal_name"
+                        style="@style/usertext"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="3dp"
+                        android:text="新用户"
+                        android:textColor="#737373" />
+
+                    <TextView
+                        android:id="@+id/perosnal_level"
+                        style="@style/usertext"
+                        android:layout_marginLeft="5dp"
+                        android:text="暂无等级"
+                        android:textColor="#737373" />
+
+                    <TextView
+                        android:id="@+id/perosnal_comment"
+                        style="@style/usertext"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:text="暂无宣言"
+                        android:textColor="#737373" />
+                </LinearLayout>
             </LinearLayout>
             <!-- 分割线 -->
 
@@ -41,14 +71,6 @@
             <!-- 无圆角 -->
             <!-- 上圆角 -->
 
-            <LinearLayout style="@style/top_layout" >
-
-                <TextView
-                    style="@style/usertext"
-                    android:text="个性签名" />
-
-                <ImageView style="@style/img_arrow" />
-            </LinearLayout>
 
             <!-- 分割线 -->
 
@@ -57,9 +79,12 @@
 
             <LinearLayout style="@style/mid_layout" >
 
-                <TextView
+                <Button
+                    android:id="@+id/perosnal_addinfo"
                     style="@style/usertext"
-                    android:text="我的资料" />
+                    android:background="@null"
+                    android:gravity="left"
+                    android:text="修改信息" />
 
                 <ImageView style="@style/img_arrow" />
             </LinearLayout>
@@ -67,10 +92,15 @@
             <View style="@style/bg_line" />
             <!-- 下圆角 -->
 
-            <LinearLayout style="@style/bottom_layout" >
+            <LinearLayout
+                style="@style/bottom_layout"
+                android:clickable="true" >
 
-                <TextView
+                 <Button
+                    android:id="@+id/perosnal_msginfo"
                     style="@style/usertext"
+                    android:background="@null"
+                    android:gravity="left"
                     android:text="消息通知" />
 
                 <ImageView style="@style/img_arrow" />
@@ -83,8 +113,11 @@
 
             <LinearLayout style="@style/single_layout" >
 
-                <TextView
+                 <Button
+                    android:id="@+id/perosnal_morefuncition"
                     style="@style/usertext"
+                    android:background="@null"
+                    android:gravity="left"
                     android:text="辅助功能" />
 
                 <ImageView style="@style/img_arrow" />

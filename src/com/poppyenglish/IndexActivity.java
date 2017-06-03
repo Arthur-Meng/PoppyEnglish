@@ -15,10 +15,13 @@ public class IndexActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_index);
+		Intent intent = getIntent();
+		final Bundle bundle = intent.getExtras();
 		Button button1 = (Button) findViewById(R.id.ladderbutton);
 		button1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent toLadder = new Intent(IndexActivity.this, LadderActivity.class);
+				toLadder.putExtras(bundle);
 				startActivity(toLadder);
 			}
 		});
@@ -26,6 +29,7 @@ public class IndexActivity extends Activity {
 		button2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent toPk = new Intent(IndexActivity.this, PkActivity.class);
+				toPk.putExtras(bundle);
 				startActivity(toPk);
 			}
 		});
@@ -33,6 +37,7 @@ public class IndexActivity extends Activity {
 		button3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent toChallenge = new Intent(IndexActivity.this, ChallengeActivity.class);
+				toChallenge.putExtras(bundle);
 				startActivity(toChallenge);
 			}
 		});
@@ -40,6 +45,7 @@ public class IndexActivity extends Activity {
 		button4.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent toLlk = new Intent(IndexActivity.this, LlkActivity.class);
+				toLlk.putExtras(bundle);
 				startActivity(toLlk);
 			}
 		});
@@ -47,6 +53,7 @@ public class IndexActivity extends Activity {
 		button5.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent toLottery = new Intent(IndexActivity.this, LotteryActivity.class);
+				toLottery.putExtras(bundle);
 				startActivity(toLottery);
 			}
 		});
@@ -54,6 +61,7 @@ public class IndexActivity extends Activity {
 		button6.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent toJgg = new Intent(IndexActivity.this, JggActivity.class);
+				toJgg.putExtras(bundle);
 				startActivity(toJgg);
 			}
 		});
@@ -61,6 +69,7 @@ public class IndexActivity extends Activity {
 		button7.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent toFriends = new Intent(IndexActivity.this, FriendsActivity.class);
+				toFriends.putExtras(bundle);
 				startActivity(toFriends);
 			}
 		});
@@ -68,6 +77,7 @@ public class IndexActivity extends Activity {
 		button8.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent toPersonal = new Intent(IndexActivity.this, PersonalActivity.class);
+				toPersonal.putExtras(bundle);
 				startActivity(toPersonal);
 			}
 		});

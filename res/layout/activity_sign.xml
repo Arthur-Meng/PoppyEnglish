@@ -30,6 +30,7 @@
                 android:layout_marginTop="5dp"
                 android:maxLength="20"
                 android:text="请输入手机号"
+                android:singleLine="true"
                 android:textColor="#545454"  
                 android:paddingLeft="55dp"
                 android:paddingRight="60dp" >
@@ -75,6 +76,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:maxLength="20"
+                android:singleLine="true"
                 android:textColor="#545454"  
                 android:paddingLeft="55dp"
                 android:paddingRight="60dp" >
@@ -104,6 +106,7 @@
                 android:layout_height="40dp"
                 android:inputType="textPassword"
                 android:maxLength="20"
+                android:singleLine="true"
                 android:paddingLeft="55dp"
                 android:paddingRight="60dp" >
             </EditText>
