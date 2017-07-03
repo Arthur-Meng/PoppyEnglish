@@ -30,18 +30,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class PersonalActivity extends Activity implements Button.OnClickListener {
-	private Button bt_perosnal_head, perosnal_addinfo, perosnal_newinfo;
+	private Button bt_perosnal_head, perosnal_addinfo, perosnal_newinfo,perosnal_logout,personal_forgive;
 	private TextView perosnal_name, perosnal_level, perosnal_comment;
 	private EditText personal_newname, personal_newpassword, personal_newgender, personal_newcomment;
 	String tel, newname, newpassword, newgender, newcomment;
 	String result;
 	String cname, cgender, ccomment;
-
+	SharedPreferences preferences;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal);
-
+		initView();
+	}
+	private void initView() {
+		preferences= getSharedPreferences("userinfo", MODE_PRIVATE);
 		Intent intent = getIntent();
 		final Bundle bundle = intent.getExtras();
 		tel = bundle.getString("tel");
@@ -57,16 +60,18 @@ public class PersonalActivity extends Activity implements Button.OnClickListener
 		bt_perosnal_head.setOnClickListener(this);
 		perosnal_addinfo = (Button) findViewById(R.id.perosnal_addinfo);
 		perosnal_addinfo.setOnClickListener(this);
-
+		perosnal_logout = (Button) findViewById(R.id.perosnal_logout);
+		perosnal_logout.setOnClickListener(this);
+		
+		
 		perosnal_name = (TextView) findViewById(R.id.perosnal_name);
 		perosnal_level = (TextView) findViewById(R.id.perosnal_level);
 		perosnal_comment = (TextView) findViewById(R.id.perosnal_comment);
-		SharedPreferences preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
 		perosnal_name.setText(preferences.getString("name", "用户名"));
 		perosnal_level.setText("1");
 		perosnal_comment.setText(preferences.getString("comment", "暂无评论"));
+		
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -100,11 +105,7 @@ public class PersonalActivity extends Activity implements Button.OnClickListener
 	}
 
 	Handler handler = new Handler() {
-		/**
-		 * Subclasses must implement this to receive messages.
-		 *
-		 * @param msg
-		 */
+
 		@Override
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
@@ -118,7 +119,6 @@ public class PersonalActivity extends Activity implements Button.OnClickListener
 					Toast.makeText(PersonalActivity.this, "更新失败", 0).show();
 					setContentView(R.layout.activity_personal);
 				}
-
 			}
 		}
 	};
@@ -129,16 +129,26 @@ public class PersonalActivity extends Activity implements Button.OnClickListener
 		switch (v.getId()) {
 		case R.id.bt_perosnal_head:
 			break;
+		case R.id.personal_forgive:
+			setContentView(R.layout.activity_personal);
+			initView();
+			break;
 		case R.id.perosnal_addinfo:
 			setContentView(R.layout.activity_personal_addinfo);
 			perosnal_newinfo = (Button) findViewById(R.id.personal_newinfo);
 			perosnal_newinfo.setOnClickListener(this);
-
 			personal_newname = (EditText) findViewById(R.id.personal_newname);
 			personal_newpassword = (EditText) findViewById(R.id.personal_newpassword);
 			personal_newgender = (EditText) findViewById(R.id.personal_newgender);
 			personal_newcomment = (EditText) findViewById(R.id.personal_newcomment);
-
+			personal_forgive = (Button) findViewById(R.id.personal_forgive);
+			personal_forgive.setOnClickListener(this);
+			break;
+		case R.id.perosnal_logout:
+			preferences.edit().clear().commit(); 
+			Toast.makeText(PersonalActivity.this, "退出登录成功", 0).show();
+			Intent toLogin = new Intent(PersonalActivity.this, LoginActivity.class);
+			startActivity(toLogin);
 			break;
 		case R.id.personal_newinfo:
 			newname = personal_newname.getText().toString().trim();
@@ -146,7 +156,6 @@ public class PersonalActivity extends Activity implements Button.OnClickListener
 			newgender = personal_newgender.getText().toString().trim();
 			newcomment = personal_newcomment.getText().toString().trim();
 			
-			SharedPreferences preferences = PersonalActivity.this.getSharedPreferences("userinfo", MODE_PRIVATE);
 			SharedPreferences.Editor editor = preferences.edit();
 			editor.putString("password", newpassword);
 			editor.putString("name", newname);
@@ -159,13 +168,9 @@ public class PersonalActivity extends Activity implements Button.OnClickListener
 				cgender=URLEncoder.encode(newgender, "utf-8");
 				ccomment=URLEncoder.encode(newcomment, "utf-8");
 			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			new Thread() {
-				// 采用get方式访问J2EE服务器
-				
-				
 				String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/addinfo?tel=" + tel + "&" + "name=" + cname
 						+ "&" + "password=" + newpassword + "&" + "gender=" + cgender + "&" + "comment=" + ccomment;
 				URL url = null;

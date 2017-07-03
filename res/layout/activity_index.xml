@@ -53,8 +53,8 @@
                     android:id="@+id/pkbuttonText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="挑战模式" />
-"
+                    android:text="休闲挑战" />
+
             </LinearLayout>
         </LinearLayout>
 

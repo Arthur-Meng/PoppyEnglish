@@ -42,6 +42,18 @@
          <item name="android:focusable">true</item>  
         <item name="android:clickable">true</item>       
     </style>
+    <style name="base_layout2">
+        <item name="android:orientation">horizontal</item> 
+		 <item name="android:layout_width">match_parent</item>       
+		 <item name="android:layout_height">wrap_content</item>
+		 <item name="android:paddingTop">1dp</item>
+		 <item name="android:paddingBottom">1dp</item>
+		 <item name="android:paddingLeft">6dp</item>
+		 <item name="android:paddingRight">6dp</item>
+        <item name="android:gravity">center_vertical</item>   
+         <item name="android:focusable">true</item>  
+        <item name="android:clickable">true</item>       
+    </style>
      <!-- 上圆角样式 -->    
     <style name="top_layout" parent="base_layout">		
         <item name="android:background">@drawable/top_layout_selector</item>

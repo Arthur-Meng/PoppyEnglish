@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -47,7 +48,7 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 	public static SoundPool soundPlayer = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
 	private HashMap<Integer, Integer> soundID = new HashMap<Integer, Integer>();
 	private SQLiteDatabase db;
-	int ID, score = 0, time = 300;
+	int ID, score = 0, time = 15;
 	String CONTENT = "", A = "", B = "", C = "", D = "", RESULT = "";
 	private String result;
 	DataBaseHelper myDbHelper;
@@ -166,7 +167,12 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 			});
 		}
 	}
-
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){   
+	    	handler.removeMessages(1);
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
 	private void showquestion() {
 		CONTENT = c.getString(c.getColumnIndex("CONTENT"));
 		A = c.getString(c.getColumnIndex("A"));
@@ -275,7 +281,7 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 			@Override
 			public void run() {
 				LinearLayout layout = (LinearLayout) toast.getView();
-				if (score > 50)
+				if (score > 60)
 					layout.setBackgroundResource(R.drawable.goodresult);
 				else
 					layout.setBackgroundResource(R.drawable.badresult);

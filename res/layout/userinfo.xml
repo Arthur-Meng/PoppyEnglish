@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/userinfo"
+        style="@style/wrap_layout"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout style="@style/base_layout2" >
+
+            <Button
+                android:id="@+id/friends_head"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@drawable/head" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/usertext"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="1dp"
+                        android:text="用户："
+                        android:textColor="#737373" />
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        style="@style/usertext"
+                        android:layout_marginTop="1dp"
+                        android:text="用户"
+                        android:textColor="#737373" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            style="@style/usertext"
+                            android:layout_marginLeft="5dp"
+                            android:text="等级："
+                            android:textColor="#737373" />
+
+                        <TextView
+                            android:id="@+id/user_level"
+                            style="@style/usertext"
+                            android:text="暂无等级"
+                            android:textColor="#737373" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                       
+
+                        <Button
+                            android:id="@+id/friends_remove"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="50dp"
+                            android:background="@drawable/reduce" />
+                             <Button
+                            android:id="@+id/friends_pk"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/friendspk" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/usertext"
+                        android:layout_marginLeft="5dp"
+                        android:text="宣言："
+                        android:textColor="#737373" />
+
+                    <TextView
+                        android:id="@+id/user_comment"
+                        style="@style/usertext"
+                        android:layout_marginBottom="1dp"
+                        android:text="暂无宣言"
+                        android:textColor="#737373" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

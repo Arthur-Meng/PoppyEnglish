@@ -154,13 +154,9 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 		case R.id.login:
 
 			new Thread() {
-				// 采用get方式访问J2EE服务器
 				String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/login?tel=" + user + "&" + "password=" + pwd;
-
 				URL url = null;
-
 				public void run() {
-
 					try {
 						url = new URL(strUrl);
 					} catch (MalformedURLException e) {
@@ -192,7 +188,6 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 							result += readLine;
 							k++;
 						}
-						
 						SharedPreferences preferences = LoginActivity.this.getSharedPreferences("userinfo", MODE_PRIVATE);
 						SharedPreferences.Editor editor = preferences.edit();
 						editor.putString("tel", user);
@@ -256,9 +251,7 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 						toIndex.putExtras(bundle);
 						startActivity(toIndex);
 					}
-
 				}
-
 			}
 		}
 	};

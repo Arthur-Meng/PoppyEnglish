@@ -9,7 +9,9 @@
         style="@style/usertext"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        android:text="PK"
+        android:text="休闲挑战"
         android:textSize="20sp" />
+
+   
 
 </RelativeLayout>
