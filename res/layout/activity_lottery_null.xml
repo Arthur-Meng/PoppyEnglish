@@ -1,0 +1,21 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F3F6"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <TextView
+        style="@style/usertext"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="错题本"
+        android:textSize="20sp" />
+    <TextView
+        style="@style/usertext"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="145dp"
+        android:text="你很棒哦，现在还没有错题！"
+        android:textSize="16sp" />
+
+</RelativeLayout>

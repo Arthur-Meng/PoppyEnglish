@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.TextureView;
@@ -29,7 +30,7 @@ public class ChallengeActivity extends Activity implements Button.OnClickListene
 	private Button bt_challenge_num6;
 	private Button bt_challenge_num7;
 	private Button bt_challenge_num8;
-	private TextView grade1,grade2,grade3,grade4,grade5,grade6,grade7,grade8;
+	private TextView grade1, grade2, grade3, grade4, grade5, grade6, grade7, grade8;
 	public static SoundPool soundPlayer = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
 
 	@Override
@@ -42,7 +43,7 @@ public class ChallengeActivity extends Activity implements Button.OnClickListene
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
 		tintManager.setStatusBarTintResource(R.color.mywhite);// 通知栏所需颜色
-		
+
 		initView();
 	}
 
@@ -72,54 +73,54 @@ public class ChallengeActivity extends Activity implements Button.OnClickListene
 		grade6 = (TextView) findViewById(R.id.grade6);
 		grade7 = (TextView) findViewById(R.id.grade7);
 		grade8 = (TextView) findViewById(R.id.grade8);
-		
+
 		final DBHelper helper = new DBHelper(this);
-		if (helper.query()!=null) {
+		if (helper.query() != null) {
 			Cursor c = helper.query();
 			String grade = null;
 			if (c != null && c.moveToFirst()) {
 				do {
 					grade = c.getString(c.getColumnIndex("grade"));
-					if (c.getString(c.getColumnIndex("name")).equals("1")){
+					if (c.getString(c.getColumnIndex("name")).equals("1")) {
 						grade1.setText(grade);
 						bt_challenge_num2.setVisibility(View.VISIBLE);
 						grade2.setVisibility(View.VISIBLE);
 					}
-					if (c.getString(c.getColumnIndex("name")).equals("2")){
+					if (c.getString(c.getColumnIndex("name")).equals("2")) {
 						grade2.setText(grade);
 						bt_challenge_num3.setVisibility(View.VISIBLE);
 						grade3.setVisibility(View.VISIBLE);
 					}
-					if (c.getString(c.getColumnIndex("name")).equals("3")){
+					if (c.getString(c.getColumnIndex("name")).equals("3")) {
 						grade3.setText(grade);
 						bt_challenge_num4.setVisibility(View.VISIBLE);
 						grade4.setVisibility(View.VISIBLE);
 					}
-					if (c.getString(c.getColumnIndex("name")).equals("4")){
+					if (c.getString(c.getColumnIndex("name")).equals("4")) {
 						grade4.setText(grade);
 						bt_challenge_num5.setVisibility(View.VISIBLE);
 						grade5.setVisibility(View.VISIBLE);
 					}
-					if (c.getString(c.getColumnIndex("name")).equals("5")){
+					if (c.getString(c.getColumnIndex("name")).equals("5")) {
 						grade5.setText(grade);
 						bt_challenge_num6.setVisibility(View.VISIBLE);
 						grade6.setVisibility(View.VISIBLE);
 					}
-					if (c.getString(c.getColumnIndex("name")).equals("6")){
+					if (c.getString(c.getColumnIndex("name")).equals("6")) {
 						grade6.setText(grade);
 						bt_challenge_num7.setVisibility(View.VISIBLE);
 						grade7.setVisibility(View.VISIBLE);
 					}
-					if (c.getString(c.getColumnIndex("name")).equals("7")){
+					if (c.getString(c.getColumnIndex("name")).equals("7")) {
 						grade7.setText(grade);
 						bt_challenge_num8.setVisibility(View.VISIBLE);
 						grade8.setVisibility(View.VISIBLE);
 					}
-					if (c.getString(c.getColumnIndex("name")).equals("8")){
+					if (c.getString(c.getColumnIndex("name")).equals("8")) {
 						grade8.setText(grade);
 						grade8.setVisibility(View.VISIBLE);
 					}
-					
+
 				} while (c.moveToNext());
 			}
 
@@ -142,6 +143,22 @@ public class ChallengeActivity extends Activity implements Button.OnClickListene
 	public void playSound() {
 		soundPlayer.load(this, R.raw.ok, 1);
 		soundPlayer.play(1, 1, 1, 0, 0, 1);
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+			Intent intent = getIntent();
+			final Bundle bundle = intent.getExtras();
+			Intent toIndex = new Intent(ChallengeActivity.this, IndexActivity.class);
+			if (bundle != null)
+				toIndex.putExtras(bundle);
+			else {
+				Bundle newbundle = new Bundle(); 
+				toIndex.putExtras(newbundle);
+			}
+			startActivity(toIndex);
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

@@ -36,7 +36,7 @@
                         android:textColor="#737373" />
 
                     <TextView
-                        android:id="@+id/user_name"
+                        android:id="@+id/friends_user_name"
                         style="@style/usertext"
                         android:layout_marginTop="1dp"
                         android:text="用户"
@@ -60,7 +60,7 @@
                             android:textColor="#737373" />
 
                         <TextView
-                            android:id="@+id/user_level"
+                            android:id="@+id/friends_user_level"
                             style="@style/usertext"
                             android:text="暂无等级"
                             android:textColor="#737373" />
@@ -101,7 +101,7 @@
                         android:textColor="#737373" />
 
                     <TextView
-                        android:id="@+id/user_comment"
+                        android:id="@+id/friends_user_comment"
                         style="@style/usertext"
                         android:layout_marginBottom="1dp"
                         android:text="暂无宣言"

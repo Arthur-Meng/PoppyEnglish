@@ -36,17 +36,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class FriendsActivity extends Activity implements Button.OnClickListener {
-	private Button searchfriend, friends_forgive,friends_search;
+	private Button searchfriend, friends_forgive, friends_search;
 	private EditText friends_username;
 	public Context context;
 	String tel, find, result;
-	
+	String[] userinfo = new String[400];
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friends);
 		initView();
-		findfriends(2,tel);
+		findfriends(2, tel);
 
 	}
 
@@ -63,7 +64,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 		Intent intent = getIntent();
 		final Bundle bundle = intent.getExtras();
 		tel = bundle.getString("tel");
-		
+
 	}
 
 	@TargetApi(19)
@@ -87,23 +88,32 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 			friends_forgive = (Button) findViewById(R.id.friends_forgive);
 			friends_forgive.setOnClickListener(this);
 			friends_username = (EditText) findViewById(R.id.friends_username);
-			friends_search=(Button) findViewById(R.id.friends_search);
+			friends_search = (Button) findViewById(R.id.friends_search);
 			friends_search.setOnClickListener(this);
 			break;
 		case R.id.friends_forgive:
 			setContentView(R.layout.activity_friends);
 			initView();
-			findfriends(2,tel);
+			userinfo=new String[400];
+			findfriends(2, tel);
 			break;
 		case R.id.friends_search:
+			setContentView(R.layout.activity_friends_add);
+			friends_forgive = (Button) findViewById(R.id.friends_forgive);
+			friends_forgive.setOnClickListener(this);
+			friends_search = (Button) findViewById(R.id.friends_search);
+			friends_search.setOnClickListener(this);
 			find = friends_username.getText().toString().trim();
-			findfriends(1,tel + "&find=" + find);
+			userinfo=new String[400];
+			findfriends(1, tel + "&find=" + find);
+			friends_username = (EditText) findViewById(R.id.friends_username);
 			break;
 		default:
 			break;
 		}
 	}
-	public void findfriends(final int x,final String key){
+
+	public void findfriends(final int x, final String key) {
 		new Thread() {
 			String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/friends?tel=" + key;
 			URL url = null;
@@ -130,8 +140,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 				}
 				BufferedReader buff = new BufferedReader(inputStreamReader);
 				result = "";
-				int k = 0;
-				String[] userinfo = new String[400];
+				int k = 1;
 				;
 				String readLine = null;
 				try {
@@ -149,88 +158,74 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 					e.printStackTrace();
 				}
 				httpURLConnection.disconnect();
-				if(x==1)
+				if (x == 1)
 					handler.sendEmptyMessage(0x123);
-				if(x==2)
+				if (x == 2)
 					handler.sendEmptyMessage(0x456);
 			}
 
 			;
 		}.start();
 	}
+
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
 				if (result.equals("NoUser")) {
 					Toast.makeText(FriendsActivity.this, result, 0).show();
-				}else if (result.equals("Add")){
+				} else if (result.equals("Add")) {
 					Toast.makeText(FriendsActivity.this, result, 0).show();
-				}else if (result.equals("Remove")){
+				} else if (result.equals("Remove")) {
 					Toast.makeText(FriendsActivity.this, result, 0).show();
-				}else if (result.equals("Error")){
+				} else if (result.equals("Error")) {
 					Toast.makeText(FriendsActivity.this, result, 0).show();
-				}else{
-					showfriends2("","","","");
-					Toast.makeText(FriendsActivity.this, result, 0).show();
+				} else {
+					int k = 1;
+					while (userinfo[k] != null) {
+						if (k % 4 == 0) {
+							showfriends2(userinfo[k-3], userinfo[k -2], userinfo[k - 1], userinfo[k]);
+						}
+						k++;
+					}
 				}
 			}
 			if (msg.what == 0x456) {
-				showfriends("","","","");
-				Toast.makeText(FriendsActivity.this, result, 0).show();
+				int k = 1;
+				while (userinfo[k] != null) {
+					if (k % 4 == 0) {
+						showfriends(userinfo[k-3], userinfo[k -2], userinfo[k - 1], userinfo[k]);
+					}
+					k++;
+				}
 			}
 		}
 	};
-	public void showfriends(String name,String gender,String honor,String comment){
-		/*RelativeLayout relative = new RelativeLayout(this);
-		LinearLayout linear=(LinearLayout) findViewById(R.layout.userinfo);
-		RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-		lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE); 
-		lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
-		relative.addView(linear, lp);*/
-		LinearLayout  relative = (LinearLayout)findViewById(R.id.showuser);  
-		LayoutInflater layoutInflater = LayoutInflater.from(this);  
-        View userLayout = layoutInflater.inflate(R.layout.userinfo,null); 
-        View userLayout2 = layoutInflater.inflate(R.layout.userinfo,null);  
-        relative.addView(userLayout);  
-        relative.addView(userLayout2);  
-        View userLayout11 = layoutInflater.inflate(R.layout.userinfo,null); 
-        View userLayout112 = layoutInflater.inflate(R.layout.userinfo,null);  
-        relative.addView(userLayout11);  
-        relative.addView(userLayout112); 
-        View userLayout22 = layoutInflater.inflate(R.layout.userinfo,null); 
-        View userLayout222 = layoutInflater.inflate(R.layout.userinfo,null);  
-        relative.addView(userLayout22);  
-        relative.addView(userLayout222); 
-        View userLayout223 = layoutInflater.inflate(R.layout.userinfo,null); 
-        View userLayout2223 = layoutInflater.inflate(R.layout.userinfo,null);  
-        relative.addView(userLayout223);  
-        relative.addView(userLayout2223); 
+
+	public void showfriends(String name, String gender, String honor, String comment) {
+		LinearLayout relative = (LinearLayout) findViewById(R.id.showuser);
+		LayoutInflater layoutInflater = LayoutInflater.from(this);
+		View userLayout = layoutInflater.inflate(R.layout.userinfo, null);
+		TextView friends_user_name = (TextView) userLayout.findViewById(R.id.friends_user_name);
+		friends_user_name.setText(name);
+		TextView friends_user_level = (TextView) userLayout.findViewById(R.id.friends_user_level);
+		friends_user_level.setText(honor);
+		TextView friends_user_comment = (TextView) userLayout.findViewById(R.id.friends_user_comment);
+		friends_user_comment.setText(comment);
+		relative.addView(userLayout);
 	}
-	public void showfriends2(String name,String gender,String honor,String comment){
-		/*RelativeLayout relative = new RelativeLayout(this);
-		LinearLayout linear=(LinearLayout) findViewById(R.layout.userinfo);
-		RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-		lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE); 
-		lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
-		relative.addView(linear, lp);*/
-		LinearLayout  relative = (LinearLayout)findViewById(R.id.showuser2);  
-		LayoutInflater layoutInflater = LayoutInflater.from(this);  
-        View userLayout = layoutInflater.inflate(R.layout.userinfo,null); 
-        View userLayout2 = layoutInflater.inflate(R.layout.userinfo,null);  
-        relative.addView(userLayout);  
-        relative.addView(userLayout2);  
-        View userLayout11 = layoutInflater.inflate(R.layout.userinfo,null); 
-        View userLayout112 = layoutInflater.inflate(R.layout.userinfo,null);  
-        relative.addView(userLayout11);  
-        relative.addView(userLayout112); 
-        View userLayout22 = layoutInflater.inflate(R.layout.userinfo,null); 
-        View userLayout222 = layoutInflater.inflate(R.layout.userinfo,null);  
-        relative.addView(userLayout22);  
-        relative.addView(userLayout222); 
-        View userLayout223 = layoutInflater.inflate(R.layout.userinfo,null); 
-        View userLayout2223 = layoutInflater.inflate(R.layout.userinfo,null);  
-        relative.addView(userLayout223);  
-        relative.addView(userLayout2223); 
+
+	public void showfriends2(String name, String gender, String honor, String comment) {
+		LinearLayout relative = (LinearLayout) findViewById(R.id.showuser2);
+		LayoutInflater layoutInflater = LayoutInflater.from(this);
+		View userLayout = layoutInflater.inflate(R.layout.userinfo_add, null);
+		TextView friends_user_name = (TextView) userLayout.findViewById(R.id.friends_user_name);
+		friends_user_name.setText(name);
+		TextView friends_user_level = (TextView) userLayout.findViewById(R.id.friends_user_level);
+		friends_user_level.setText(honor);
+		TextView friends_user_comment = (TextView) userLayout.findViewById(R.id.friends_user_comment);
+		friends_user_comment.setText(comment);
+		relative.addView(userLayout);
+
 	}
 }

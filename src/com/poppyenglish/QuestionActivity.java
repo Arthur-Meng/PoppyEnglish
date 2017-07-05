@@ -2,6 +2,8 @@ package com.poppyenglish;
 
 import java.io.Console;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract.CommonDataKinds.Identity;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -44,11 +47,11 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 	private RadioButton question_ButtonB;
 	private RadioButton question_ButtonC;
 	private RadioButton question_ButtonD;
-	private Boolean ifstop=false;
+	private Boolean ifstop = false;
 	public static SoundPool soundPlayer = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
 	private HashMap<Integer, Integer> soundID = new HashMap<Integer, Integer>();
 	private SQLiteDatabase db;
-	int ID, score = 0, time = 15;
+	int ID, score = 0, time = 300;
 	String CONTENT = "", A = "", B = "", C = "", D = "", RESULT = "";
 	private String result;
 	DataBaseHelper myDbHelper;
@@ -65,7 +68,7 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
 		tintManager.setStatusBarTintResource(R.color.mywhite);// 通知栏所需颜色
-		
+
 		myDbHelper = new DataBaseHelper(getApplicationContext());
 		try {
 			myDbHelper.createDataBase();
@@ -92,20 +95,42 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 		question_ButtonD.setOnClickListener(this);
 
 		title.setText("关卡" + bundle.getString("questionnum"));
-		
-		
+
 		Message message = handler.obtainMessage(1); // Message
-		message.what=1;
+		message.what = 1;
 		handler.sendMessageDelayed(message, 1000);
-		
+
 		playSound();
-		if (c != null && c.moveToFirst()) {
+		if (c != null) {
+			c.moveToFirst();
+			for (int i = 1; i < Integer.parseInt(bundle.getString("questionnum")); i++) {
+				for (int n = 0; n < 10; n++)
+					c.moveToNext();
+			}
 			showquestion();
 			makesurebutton.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					if (num < 10) {
 						if (c.getString(c.getColumnIndex("RESULT")).equals(result))
 							score += 10;
+						else {
+							ErrorDBHelper errordb = new ErrorDBHelper(getApplicationContext());
+							ContentValues values = new ContentValues();
+							values.put("name", result);
+							//name 是选出的选项，error是题号
+							int  qnum= Integer.parseInt(bundle.getString("questionnum")) * 10 + num-10;
+							values.put("error",qnum);
+							long time = System.currentTimeMillis();
+							SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+							Date d1 = new Date(time);
+							String t1 = format.format(d1);
+							values.put("errdate", t1);
+							if (errordb.ifhave(qnum)) {
+								errordb.update(values, qnum);
+							} else {
+								errordb.insert(values);
+							}
+						}
 						question_ButtonA.setChecked(false);
 						question_ButtonB.setChecked(false);
 						question_ButtonC.setChecked(false);
@@ -123,20 +148,19 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 						ContentValues values = new ContentValues();
 						values.put("name", bundle.getString("questionnum"));
 						values.put("grade", Integer.toString(score));
-						
+
 						if (helper.ifhave(bundle.getString("questionnum"))) {
-							System.out.println("QuestionGrade-Uptade"+bundle.getString("questionnum"));
+							System.out.println("QuestionGrade-Uptade" + bundle.getString("questionnum"));
 							helper.update(values, bundle.getString("questionnum"));
 						} else {
-							System.out.println("Insert"+bundle.getString("questionnum"));
+							System.out.println("Insert" + bundle.getString("questionnum"));
 							helper.insert(values);
 						}
-						
+
 						handler.removeMessages(1);
-						
-						
+
 						Toast toast = Toast.makeText(QuestionActivity.this, "", Toast.LENGTH_LONG);
-						
+
 						if (score >= 80) {
 							soundPlayer.play(soundID.get(2), 1, 1, 0, 0, 1);
 							showLastToast(toast, 3000);
@@ -144,7 +168,7 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 							soundPlayer.play(soundID.get(3), 1, 1, 0, 0, 1);
 							showLastToast(toast, 1500);
 						}
-						
+
 						toast.setGravity(Gravity.CENTER, 0, 0);
 
 						final Timer timer = new Timer();
@@ -158,7 +182,7 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 							public void run() {
 								Intent toChallenge = new Intent(QuestionActivity.this, ChallengeActivity.class);
 								startActivity(toChallenge);
-								
+
 							}
 						}, 2000);
 
@@ -167,12 +191,14 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 			});
 		}
 	}
+
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){   
-	    	handler.removeMessages(1);
-	    }
-	    return super.onKeyDown(keyCode, event);
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+			handler.removeMessages(1);
+		}
+		return super.onKeyDown(keyCode, event);
 	}
+
 	private void showquestion() {
 		CONTENT = c.getString(c.getColumnIndex("CONTENT"));
 		A = c.getString(c.getColumnIndex("A"));
@@ -314,8 +340,8 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 1:
-				if(!ifstop)
-				time--;
+				if (!ifstop)
+					time--;
 				if (time >= 0) {
 					Message message = handler.obtainMessage(1);
 					handler.sendMessageDelayed(message, 1000);
