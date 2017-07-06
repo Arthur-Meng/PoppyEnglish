@@ -6,4 +6,10 @@
     <color name="white">#fff</color>
     <color name="blue">#419DE4</color>
     <color name="mywhite">#F0F3F6</color>
+    <color name="background">#ffe6f0ff</color>
+    <color name="line">#ffffffff</color>
+    <color name="light">#64c6d4ef</color>
+    <color name="dark">#D3D3D3</color>
+    <color name="hilite">#ffffffff</color>
+    <color name="gray">#D3D3D3</color>
 </resources>

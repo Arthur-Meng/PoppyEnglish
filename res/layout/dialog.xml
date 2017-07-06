@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:stretchColumns="*">
+
+
+<TableRow>
+    
+   <Button
+    android:id="@+id/a"
+    android:text="a"
+    ></Button>
+    
+    
+    <Button
+        android:id="@+id/b"
+        android:text="b"
+        ></Button>
+    
+    
+    <Button
+        android:id="@+id/c"
+        android:text="c"
+        ></Button>
+    
+     <Button
+        android:id="@+id/d"
+        android:text="d"
+        ></Button>
+    
+      <Button
+        android:id="@+id/e"
+        android:text="e"
+        ></Button>
+    
+      </TableRow>
+      <TableRow >
+      <Button
+        android:id="@+id/f"
+        android:text="f"
+        ></Button>
+    
+       <Button
+        android:id="@+id/g"
+        android:text="g"
+        ></Button>
+    
+        <Button
+        android:id="@+id/h"
+        android:text="h"
+        ></Button>
+        
+     <Button
+        android:id="@+id/i"
+        android:text="i"
+        ></Button>
+    
+      <Button
+        android:id="@+id/j"
+        android:text="j"
+        ></Button>
+    
+    
+    </TableRow>
+
+      <TableRow >
+          <Button
+        android:id="@+id/k"
+        android:text="k"
+        ></Button>
+    
+          <Button
+        android:id="@+id/l"
+        android:text="l"
+        ></Button>
+    
+          <Button
+        android:id="@+id/m"
+        android:text="m"
+        ></Button>
+    
+          <Button
+        android:id="@+id/n"
+        android:text="n"
+        ></Button>
+    
+      <Button
+        android:id="@+id/o"
+        android:text="o"
+        ></Button>
+        
+      </TableRow>
+      
+      <TableRow >
+          
+          <Button
+        android:id="@+id/p"
+        android:text="p"
+        ></Button>
+    
+          <Button
+        android:id="@+id/q"
+        android:text="q"
+        ></Button>
+    
+        <Button
+        android:id="@+id/r"
+        android:text="r"
+        ></Button>
+      
+        <Button
+        android:id="@+id/s"
+        android:text="s"
+        ></Button>
+    
+        <Button
+        android:id="@+id/t"
+        android:text="t"
+        ></Button>
+    
+      </TableRow>
+      
+      <TableRow >
+          
+          <Button
+        android:id="@+id/u"
+        android:text="u"
+        ></Button>
+    
+        <Button
+        android:id="@+id/v"
+        android:text="v"
+        ></Button>
+      
+      <Button
+        android:id="@+id/w"
+        android:text="w"
+        ></Button>
+        
+      <Button
+        android:id="@+id/x"
+        android:text="x"
+        ></Button>
+    
+      <Button
+        android:id="@+id/y"
+        android:text="y"
+        ></Button>
+    
+      </TableRow>
+      
+      <TableRow >
+          <Button
+        android:id="@+id/z"
+        android:text="z"
+        ></Button>
+    
+            <Button
+        android:id="@+id/kong"
+        android:text=" "
+        ></Button>
+    
+      </TableRow>
+    </TableLayout>
