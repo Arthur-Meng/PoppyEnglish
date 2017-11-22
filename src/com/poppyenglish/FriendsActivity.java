@@ -3,9 +3,11 @@ package com.poppyenglish;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import com.poppyenglish.R.layout;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -40,6 +42,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 	private EditText friends_username;
 	public Context context;
 	String tel, find, result;
+	String ckey;
 	String[] userinfo = new String[400];
 
 	@Override
@@ -105,7 +108,13 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 			friends_search.setOnClickListener(this);
 			find = friends_username.getText().toString().trim();
 			userinfo=new String[400];
-			findfriends(1, tel + "&find=" + find);
+			try {
+				ckey=URLEncoder.encode(find, "utf-8");
+				
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
+			findfriends(1, tel + "&find=" + ckey);
 			friends_username = (EditText) findViewById(R.id.friends_username);
 			break;
 		default:
@@ -114,6 +123,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 	}
 
 	public void findfriends(final int x, final String key) {
+		
 		new Thread() {
 			String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/friends?tel=" + key;
 			URL url = null;
@@ -173,13 +183,13 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
 				if (result.equals("NoUser")) {
-					Toast.makeText(FriendsActivity.this, result, 0).show();
+					Toast.makeText(FriendsActivity.this, "没有该用户", 0).show();
 				} else if (result.equals("Add")) {
 					Toast.makeText(FriendsActivity.this, result, 0).show();
 				} else if (result.equals("Remove")) {
 					Toast.makeText(FriendsActivity.this, result, 0).show();
 				} else if (result.equals("Error")) {
-					Toast.makeText(FriendsActivity.this, result, 0).show();
+					Toast.makeText(FriendsActivity.this, "错误", 0).show();
 				} else {
 					int k = 1;
 					while (userinfo[k] != null) {

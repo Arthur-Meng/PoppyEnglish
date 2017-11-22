@@ -37,7 +37,7 @@ import android.widget.Toast;
 import android.os.Bundle;
 
 public class LoginActivity extends Activity implements Button.OnClickListener {
-	private Context context;  
+	private Context context;
 	private EditText username, password;
 	private Button bt_username_clear;
 	private Button bt_pwd_clear;
@@ -48,8 +48,7 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 	private boolean isOpen = false;
 	String user;
 	String pwd;
-	String result;
-	
+	String[] result;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,67 +151,9 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 			changePwdOpenOrClose(isOpen);
 			break;
 		case R.id.login:
-
-			new Thread() {
-				String strUrl = "http://www.arthurmeng.cn/PoppyEnglish/login?tel=" + user + "&" + "password=" + pwd;
-				URL url = null;
-				public void run() {
-					try {
-						url = new URL(strUrl);
-					} catch (MalformedURLException e) {
-						// TODO Auto-generated catch block
-						System.out.println("myhttptest-error1");
-						e.printStackTrace();
-					}
-					HttpURLConnection httpURLConnection = null;
-					try {
-						httpURLConnection = (HttpURLConnection) url.openConnection();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					InputStreamReader inputStreamReader = null;
-					try {
-						inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					BufferedReader buff = new BufferedReader(inputStreamReader);
-					result = "";
-					int k = 0;
-					String[] userinfo = new String[4];
-					;
-					String readLine = null;
-					try {
-						while ((readLine = buff.readLine()) != null) {
-							userinfo[k] = readLine;
-							result += readLine;
-							k++;
-						}
-						SharedPreferences preferences = LoginActivity.this.getSharedPreferences("userinfo", MODE_PRIVATE);
-						SharedPreferences.Editor editor = preferences.edit();
-						editor.putString("tel", user);
-						editor.putString("password", pwd);
-						editor.putString("name", userinfo[0]);
-						editor.putString("gender", userinfo[1]);
-						editor.putString("honor", userinfo[2]);
-						editor.putString("comment", userinfo[3]);
-						editor.commit();
-
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					try {
-						inputStreamReader.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					httpURLConnection.disconnect();
-					handler.sendEmptyMessage(0x123);
-				}
-
-				;
-			}.start();
-
+			LoginURL loginurl = new LoginURL();
+			result = loginurl.login(user, pwd);
+			handleMessage(result);
 			break;
 		case R.id.register:
 			Intent toSign = new Intent(LoginActivity.this, SignActivity.class);
@@ -226,35 +167,35 @@ public class LoginActivity extends Activity implements Button.OnClickListener {
 		}
 	}
 
-	Handler handler = new Handler() {
-		/**
-		 * Subclasses must implement this to receive messages.
-		 *
-		 * @param msg
-		 */
-		@Override
-		public void handleMessage(Message msg) {
-			if (msg.what == 0x123) {
-				if (result.equals("NoUser")) {
-					Toast.makeText(LoginActivity.this, "请先注册", 0).show();
-					Intent toSign = new Intent(LoginActivity.this, SignActivity.class);
-					startActivity(toSign);
-				} else {
-					if (result.equals("WrongPassword")) {
-						password.setText("");
-						Toast.makeText(LoginActivity.this, "密码错误", 0).show();
-					} else {
-						Intent toIndex = new Intent(LoginActivity.this, IndexActivity.class);
-						Bundle bundle = new Bundle();
-						bundle.putCharSequence("tel", user);
-						bundle.putCharSequence("password", pwd);
-						toIndex.putExtras(bundle);
-						startActivity(toIndex);
-					}
-				}
+	public void handleMessage(String[] result) {
+		if (result[0].equals("NoUser")) {
+			Toast.makeText(LoginActivity.this, "请先注册", 0).show();
+			Intent toSign = new Intent(LoginActivity.this, SignActivity.class);
+			startActivity(toSign);
+		} else {
+			if (result[0].equals("WrongPassword")) {
+				password.setText("");
+				Toast.makeText(LoginActivity.this, "密码错误", 0).show();
+			} else {
+				SharedPreferences preferences = LoginActivity.this.getSharedPreferences("userinfo", MODE_PRIVATE);
+				SharedPreferences.Editor editor = preferences.edit();
+				editor.putString("tel", user);
+				editor.putString("password", pwd);
+				editor.putString("name", result[0]);
+				editor.putString("gender", result[1]);
+				editor.putString("honor", result[2]);
+				editor.putString("comment", result[3]);
+				editor.commit();
+				Intent toIndex = new Intent(LoginActivity.this, IndexActivity.class);
+				Bundle bundle = new Bundle();
+				
+				bundle.putCharSequence("tel", user);
+				bundle.putCharSequence("password", pwd);
+				toIndex.putExtras(bundle);
+				startActivity(toIndex);
 			}
 		}
-	};
+	}
 
 	private void changePwdOpenOrClose(boolean flag) {
 

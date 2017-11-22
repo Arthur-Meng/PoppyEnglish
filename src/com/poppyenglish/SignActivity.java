@@ -315,6 +315,7 @@ public class SignActivity extends Activity implements Button.OnClickListener {
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
 				if (result.equals("Yes")) {
+					Toast.makeText(SignActivity.this, "注册成功，请登陆。", 0).show();
 					Intent toLogin = new Intent(SignActivity.this, LoginActivity.class);
 					startActivity(toLogin);
 				} else if (result.equals("No")) {

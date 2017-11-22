@@ -144,18 +144,8 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 					} else {
 						if (c.getString(c.getColumnIndex("RESULT")).equals(result))
 							score += 10;
-						DBHelper helper = new DBHelper(getApplicationContext());
-						ContentValues values = new ContentValues();
-						values.put("name", bundle.getString("questionnum"));
-						values.put("grade", Integer.toString(score));
-
-						if (helper.ifhave(bundle.getString("questionnum"))) {
-							System.out.println("QuestionGrade-Uptade" + bundle.getString("questionnum"));
-							helper.update(values, bundle.getString("questionnum"));
-						} else {
-							System.out.println("Insert" + bundle.getString("questionnum"));
-							helper.insert(values);
-						}
+						
+						
 
 						handler.removeMessages(1);
 
@@ -164,6 +154,18 @@ public class QuestionActivity extends Activity implements Button.OnClickListener
 						if (score >= 80) {
 							soundPlayer.play(soundID.get(2), 1, 1, 0, 0, 1);
 							showLastToast(toast, 3000);
+							DBHelper helper = new DBHelper(getApplicationContext());
+							ContentValues values = new ContentValues();
+							values.put("name", bundle.getString("questionnum"));
+							values.put("grade", Integer.toString(score));
+
+							if (helper.ifhave(bundle.getString("questionnum"))) {
+								System.out.println("QuestionGrade-Uptade" + bundle.getString("questionnum"));
+								helper.update(values, bundle.getString("questionnum"));
+							} else {
+								System.out.println("Insert" + bundle.getString("questionnum"));
+								helper.insert(values);
+							}
 						} else {
 							soundPlayer.play(soundID.get(3), 1, 1, 0, 0, 1);
 							showLastToast(toast, 1500);
