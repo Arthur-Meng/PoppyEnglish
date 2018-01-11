@@ -50,6 +50,12 @@
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
         </activity>
         <activity
+            android:name=".PkQuestionActivity"
+            android:label="@string/title_activity_pkquestion"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
             android:name=".ChallengeActivity"
             android:label="@string/title_activity_challenge"
             android:screenOrientation="portrait" >

@@ -26,7 +26,7 @@ public class MyContent {
 	}
 
 	public String[] getContent() {
-		content=contentAll.split(":");
+		this.content=this.contentAll.split(":");
 		return this.content;
 	}
 

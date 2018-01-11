@@ -4,8 +4,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -38,11 +36,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 
 	}
-	public Cursor selectAll(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TBL_NAME, null, null, null,null, null, null);
-        return cursor;
-    }
+
+	public Cursor selectAll() {
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query(TBL_NAME, null, null, null, null, null, null);
+		return cursor;
+	}
+
 	public synchronized void close() {
 
 		if (myDataBase != null)
@@ -138,11 +138,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 	}
 
-	public SQLiteDatabase  openDataBase() throws SQLException {
+	public SQLiteDatabase openDataBase() throws SQLException {
 
 		// Open the database
 		String myPath = DB_PATH + DB_NAME;
 		myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-		return myDataBase ;
+		return myDataBase;
 	}
 }

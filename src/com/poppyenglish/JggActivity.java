@@ -1,17 +1,12 @@
 package com.poppyenglish;
 
-
-
 import com.readystatesoftware.systembartint.SystemBarTintManager;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -42,17 +37,18 @@ public class JggActivity extends Activity implements Button.OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_jgg);
-		app =new MyApplication();
+		app = new MyApplication();
 		lookview();
-		
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTranslucentStatus(true);
 		}
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
-		tintManager.setStatusBarTintResource(R.color.mywhite);//通知栏所需颜色
+		tintManager.setStatusBarTintResource(R.color.mywhite);// 通知栏所需颜色
 	}
-	@TargetApi(19) 
+
+	@TargetApi(19)
 	private void setTranslucentStatus(boolean on) {
 		Window win = getWindow();
 		WindowManager.LayoutParams winParams = win.getAttributes();
@@ -64,6 +60,7 @@ public class JggActivity extends Activity implements Button.OnClickListener {
 		}
 		win.setAttributes(winParams);
 	}
+
 	public void lookview() {
 
 		yi = (Button) findViewById(R.id.yi);
@@ -110,6 +107,7 @@ public class JggActivity extends Activity implements Button.OnClickListener {
 			}
 		}
 	}
+
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
 			Intent intent = getIntent();
@@ -118,13 +116,14 @@ public class JggActivity extends Activity implements Button.OnClickListener {
 			if (bundle != null)
 				toIndex.putExtras(bundle);
 			else {
-				Bundle newbundle = new Bundle(); 
+				Bundle newbundle = new Bundle();
 				toIndex.putExtras(newbundle);
 			}
 			startActivity(toIndex);
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+
 	@Override
 	public void onClick(View v) {
 

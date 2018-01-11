@@ -13,6 +13,15 @@
         android:text="题目"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/pk_questiontime"
+        style="@style/usertext"
+        android:layout_alignBaseline="@+id/pk_questiontitle"
+        android:layout_alignLeft="@+id/pk_questiontitle"
+        android:layout_marginLeft="100dp"
+        android:text="时间"
+        android:textSize="15sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -70,27 +79,70 @@
                 android:text="RadioButton" />
         </LinearLayout>
     </LinearLayout>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="bottom">
-    <Button
-        android:id="@+id/pk_makesurebutton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/makesure" />
 
-    <TextView
-        android:id="@+id/pk_questiontime"
-        style="@style/usertext"
-        android:layout_alignBaseline="@+id/pk_makesurebutton"
-        android:layout_alignBottom="@+id/pk_makesurebutton"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="25dp"
-        android:text="时间"
-        android:textSize="15sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom" >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/pk_enemy_name"
+            style="@style/usertext"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="25dp"
+            android:text="敌人"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/pk_enemy_score"
+            style="@style/usertext"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/pk_enemy_name"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:text="总分"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/pk_enemy_now"
+            style="@style/usertext"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/pk_enemy_score"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:text="当前"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/pk_my_name"
+            style="@style/usertext"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="25dp"
+            android:text="我"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/pk_my_score"
+            style="@style/usertext"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/pk_my_name"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="10dp"
+            android:text="总分"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/pk_my_now"
+            style="@style/usertext"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/pk_my_score"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:text="当前"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
 </RelativeLayout>

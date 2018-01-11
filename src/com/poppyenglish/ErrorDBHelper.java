@@ -1,19 +1,17 @@
 package com.poppyenglish;
 
-import android.R.string;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class ErrorDBHelper extends SQLiteOpenHelper{
+public class ErrorDBHelper extends SQLiteOpenHelper {
 	private static final String DB_NAME = "con1.db";
 
 	private static final String TBL_NAME = "ErrorInfor";
 
 	private SQLiteDatabase db;
-
 
 	ErrorDBHelper(Context c) {
 		super(c, DB_NAME, null, 2);
@@ -26,24 +24,23 @@ public class ErrorDBHelper extends SQLiteOpenHelper{
 		db.execSQL(CREATE_TBL);
 	}
 
-
 	public void insert(ContentValues values) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.insert(TBL_NAME, null, values);
 		db.close();
 	}
 
-	public void update(ContentValues values,Integer error) {
+	public void update(ContentValues values, Integer error) {
 		SQLiteDatabase db = getWritableDatabase();
-		db.update(TBL_NAME, values,"error=?", new String[] { String.valueOf(error) });
+		db.update(TBL_NAME, values, "error=?", new String[] { String.valueOf(error) });
 		db.close();
 	}
+
 	public Cursor query() {
 		SQLiteDatabase db = getWritableDatabase();
 		Cursor c = db.query(TBL_NAME, null, null, null, null, null, null);
 		return c;
 	}
-
 
 	public Cursor query(int error) {
 		SQLiteDatabase db = getWritableDatabase();
@@ -51,13 +48,11 @@ public class ErrorDBHelper extends SQLiteOpenHelper{
 		return c;
 	}
 
-
 	public void del(int error) {
 		if (db == null)
 			db = getWritableDatabase();
 		db.delete(TBL_NAME, "error=?", new String[] { String.valueOf(error) });
 	}
-
 
 	public void close() {
 		if (db != null)
@@ -69,7 +64,7 @@ public class ErrorDBHelper extends SQLiteOpenHelper{
 		Cursor c = db.query(TBL_NAME, null, null, null, null, null, null);
 		if (c != null && c.moveToFirst()) {
 			do {
-				if (c.getInt(c.getColumnIndex("error"))==name) {
+				if (c.getInt(c.getColumnIndex("error")) == name) {
 					return true;
 				}
 			} while (c.moveToNext());
@@ -80,6 +75,6 @@ public class ErrorDBHelper extends SQLiteOpenHelper{
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		
+
 	}
 }

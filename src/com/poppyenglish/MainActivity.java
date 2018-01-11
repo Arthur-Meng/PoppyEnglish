@@ -1,25 +1,13 @@
 package com.poppyenglish;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends Activity {
 
@@ -74,21 +62,17 @@ public class MainActivity extends Activity {
 							startActivity(intent);
 						}
 					} else {
-						AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-						builder.setTitle("Sorry");
-						builder.setMessage("您未联网或者我们的服务器正在抢修，请检查网络或耐心等待~");
+						new SweetAlertDialog(MainActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+								.setTitleText("Sorry!").setContentText("您未联网或者我们的服务器正在抢修，请检查网络或耐心等待~")
+								.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+									@Override
+									public void onClick(SweetAlertDialog sDialog) {
+										Intent intent = new Intent(MainActivity.this, StartActivity.class);
+										startActivity(intent);
+										MainActivity.this.finish();
+									}
+								}).show();
 
-						OnClickListener onclick = new OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								// TODO Auto-generated method stub
-								Intent intent = new Intent(MainActivity.this, StartActivity.class);
-								startActivity(intent);
-								MainActivity.this.finish();
-							}
-						};
-						builder.setPositiveButton("确定", onclick);
-						builder.show();
 					}
 				} else {
 					Intent intent = new Intent(MainActivity.this, StartActivity.class);

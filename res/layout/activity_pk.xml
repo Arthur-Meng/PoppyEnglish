@@ -15,11 +15,28 @@
 
     <Button
         android:id="@+id/matchbutton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="160dp"
         android:background="@drawable/makesure" />
+
+    <TextView
+        android:id="@+id/textView2"
+        style="@style/usertext"
+        android:layout_below="@+id/matchbutton"
+        android:layout_centerHorizontal="true"
+        android:text="开始匹配"
+        android:textSize="15sp" />
+
+    <com.ant.liao.GifView
+        android:id="@+id/gif2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:enabled="false" />
 
 </RelativeLayout>

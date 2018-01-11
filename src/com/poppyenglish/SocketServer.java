@@ -5,10 +5,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
 
 public class SocketServer {
 	private static OutputStream os;
@@ -54,7 +52,7 @@ public class SocketServer {
 
 	public static void write(String msg) {
 		try {
-			os.write((msg+'\n').getBytes("utf-8"));
+			os.write((msg + '\n').getBytes("utf-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

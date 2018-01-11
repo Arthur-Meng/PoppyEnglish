@@ -8,6 +8,7 @@
     <string name="title_activity_sign">注册</string>
     <string name="title_activity_login">登陆</string>
     <string name="title_activity_index">IndexActivity</string>
+    <string name="title_activity_pkquestion">PkQuestionActivity</string>
     <string name="title_activity_challenge">ChallengeActivity</string>
     <string name="title_activity_friends">FriendsActivity</string>
     <string name="title_activity_jgg">JggActivity</string>
@@ -18,5 +19,10 @@
     <string name="title_activity_pk">PkActivity</string>
     <string name="title_activity_question">Question</string>
     <string name="title_activity_jgg_question">JggQuestionActivity</string>
+    <string name="default_progressbar">Default Progressbar:</string>
+    <string name="dialog_default_title">Here\'s a message!</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="LOADING">Loading...</string>
 
 </resources>

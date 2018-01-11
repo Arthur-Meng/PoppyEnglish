@@ -6,13 +6,10 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,7 +27,7 @@ public class LotteryActivity extends Activity implements Button.OnClickListener 
 	private RadioButton question_ButtonB;
 	private RadioButton question_ButtonC;
 	private RadioButton question_ButtonD;
-	String CONTENT , A , B , C , D , RESULT , date, choose;
+	String CONTENT, A, B, C, D, RESULT, date, choose;
 	int error;
 	private SQLiteDatabase db;
 	DataBaseHelper myDbHelper;
@@ -85,7 +82,7 @@ public class LotteryActivity extends Activity implements Button.OnClickListener 
 				c = helper.query();
 				if (c != null && c.moveToFirst()) {
 					showall();
-				}else{
+				} else {
 					setContentView(R.layout.activity_lottery_null);
 				}
 			}
@@ -93,7 +90,8 @@ public class LotteryActivity extends Activity implements Button.OnClickListener 
 			// TODO: handle exception
 		}
 	}
-	public void showall(){
+
+	public void showall() {
 		// 显示错题
 		error = c.getInt(c.getColumnIndex("error"));
 		choose = c.getString(c.getColumnIndex("name"));
@@ -103,12 +101,24 @@ public class LotteryActivity extends Activity implements Button.OnClickListener 
 		question_ButtonD.setEnabled(false);
 		if (choose.equals("A")) {
 			question_ButtonA.setChecked(true);
+			question_ButtonB.setChecked(false);
+			question_ButtonC.setChecked(false);
+			question_ButtonD.setChecked(false);
 		} else if (choose.equals("B")) {
 			question_ButtonB.setChecked(true);
+			question_ButtonA.setChecked(false);
+			question_ButtonC.setChecked(false);
+			question_ButtonD.setChecked(false);
 		} else if (choose.equals("C")) {
 			question_ButtonC.setChecked(true);
+			question_ButtonB.setChecked(false);
+			question_ButtonA.setChecked(false);
+			question_ButtonD.setChecked(false);
 		} else if (choose.equals("D")) {
 			question_ButtonD.setChecked(true);
+			question_ButtonB.setChecked(false);
+			question_ButtonC.setChecked(false);
+			question_ButtonA.setChecked(false);
 		}
 		date = c.getString(c.getColumnIndex("errdate"));
 		questiontime.setText("错误日期：" + date);
@@ -123,14 +133,15 @@ public class LotteryActivity extends Activity implements Button.OnClickListener 
 		C = qc.getString(qc.getColumnIndex("C"));
 		D = qc.getString(qc.getColumnIndex("D"));
 		RESULT = qc.getString(qc.getColumnIndex("RESULT"));
-		
-		question_content.setText(String.valueOf((int)(error/10)+1)+"."+CONTENT);
+
+		question_content.setText(String.valueOf((int) (error / 10) + 1) + "." + CONTENT);
 		question_ButtonA.setText(A);
 		question_ButtonB.setText(B);
 		question_ButtonC.setText(C);
 		question_ButtonD.setText(D);
-		question_answer.setText("正确答案："+RESULT);
+		question_answer.setText("正确答案：" + RESULT);
 	}
+
 	@TargetApi(19)
 	private void setTranslucentStatus(boolean on) {
 		Window win = getWindow();
@@ -153,19 +164,19 @@ public class LotteryActivity extends Activity implements Button.OnClickListener 
 			initview();
 			break;
 		case R.id.upbutton:
-			try{
+			try {
 				c.moveToPrevious();
 				showall();
-			}catch (Exception e) {
+			} catch (Exception e) {
 				// TODO: handle exception
 				Toast.makeText(LotteryActivity.this, "这已经是第一个了", 0).show();
 			}
 			break;
 		case R.id.nextbutton:
-			try{
-			c.moveToNext();
-			showall();
-			}catch (Exception e) {
+			try {
+				c.moveToNext();
+				showall();
+			} catch (Exception e) {
 				// TODO: handle exception
 				Toast.makeText(LotteryActivity.this, "已经没有下一个了", 0).show();
 			}

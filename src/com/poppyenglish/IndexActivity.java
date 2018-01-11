@@ -6,23 +6,29 @@ import com.ant.liao.GifView.GifImageType;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class IndexActivity extends Activity {
 	GifView gf1;
+	MyContent myContent = MyContent.getInstance();
+	SocketServer socketServer = SocketServer.getInstance();
+	String[] content;
+	String myTel;
+	String enemyTel;
+	Bundle bundle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_index);
 		Intent intent = getIntent();
-		final Bundle bundle = intent.getExtras();
-
+		bundle = intent.getExtras();
 		gf1 = (GifView) findViewById(R.id.gif1);
 		// 设置Gif图片源
 		gf1.setGifImage(R.drawable.gif1);
@@ -98,5 +104,54 @@ public class IndexActivity extends Activity {
 				startActivity(toPersonal);
 			}
 		});
+
+		myTel = bundle.getString("tel");
+		socketServer.write(myTel + ":register");
+		thread.start();
+
 	}
+
+	Thread thread = new Thread() {
+		public Boolean ifStop = false;
+
+		public void run() {
+			while (!ifStop) {
+				if (myContent.getIfReady().equals(true)) {
+					content = myContent.getContent();
+					if (content[1].startsWith("ifpk")) {
+						handler.sendEmptyMessage(0x121);
+						myContent.setIfReady(false);
+					}
+				}
+			}
+		}
+	};
+
+	Handler handler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 0x121) {
+				SweetAlertDialog.OnSweetClickListener nolistener = new SweetAlertDialog.OnSweetClickListener() {
+					@Override
+					public void onClick(SweetAlertDialog sDialog) {
+						socketServer.write(myTel + ":ifpkno:" + content[2]);
+					}
+				};
+				SweetAlertDialog.OnSweetClickListener yeslistener = new SweetAlertDialog.OnSweetClickListener() {
+					@Override
+					public void onClick(SweetAlertDialog sDialog) {
+						socketServer.write(myTel + ":ifpkyes:" + content[2]);
+						Intent toPkQuestionActivity = new Intent(IndexActivity.this, PkQuestionActivity.class);
+						toPkQuestionActivity.putExtras(bundle);
+						startActivity(toPkQuestionActivity);
+					}
+				};
+				new SweetAlertDialog(IndexActivity.this, SweetAlertDialog.NORMAL_TYPE).setTitleText("注意")
+						.setContentText("您的好友" + content[3] + "想要挑战您").setCancelClickListener(nolistener)
+						.setConfirmClickListener(yeslistener).show();
+			}
+
+		}
+	};
 }

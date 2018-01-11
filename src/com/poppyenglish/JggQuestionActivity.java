@@ -1,6 +1,5 @@
 package com.poppyenglish;
 
-
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import android.annotation.TargetApi;
@@ -25,9 +24,10 @@ public class JggQuestionActivity extends Activity {
 		}
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
-		tintManager.setStatusBarTintResource(R.color.mywhite);//通知栏所需颜色
+		tintManager.setStatusBarTintResource(R.color.mywhite);// 通知栏所需颜色
 	}
-	@TargetApi(19) 
+
+	@TargetApi(19)
 	private void setTranslucentStatus(boolean on) {
 		Window win = getWindow();
 		WindowManager.LayoutParams winParams = win.getAttributes();
@@ -39,6 +39,7 @@ public class JggQuestionActivity extends Activity {
 		}
 		win.setAttributes(winParams);
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

@@ -1,14 +1,11 @@
 package com.poppyenglish;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import android.content.Intent;
 
 public class LoginURL {
 	static String[] userinfo = new String[4];

@@ -26,6 +26,7 @@
         <LinearLayout
             style="@style/wrap_layout"
             android:layout_height="wrap_content" >
+
             <LinearLayout style="@style/top_layout" >
 
                 <Button
@@ -99,13 +100,12 @@
                 </LinearLayout>
             </LinearLayout>
             <!-- 分割线 -->
-            <View style="@style/bg_line" />
-         
 
+            <View style="@style/bg_line" />
 
             <!-- 分割线 -->
+
             <View style="@style/bg_line" />
-           
 
             <LinearLayout style="@style/mid_layout" >
 
@@ -120,7 +120,6 @@
             </LinearLayout>
 
             <View style="@style/bg_line" />
-         
 
             <LinearLayout
                 style="@style/bottom_layout"
@@ -144,11 +143,11 @@
             <LinearLayout style="@style/single_layout" >
 
                 <Button
-                    android:id="@+id/perosnal_morefuncition"
+                    android:id="@+id/perosnal_oneday"
                     style="@style/usertext"
                     android:background="@null"
                     android:gravity="left"
-                    android:text="辅助功能" />
+                    android:text="每日一句" />
 
                 <ImageView style="@style/img_arrow" />
             </LinearLayout>
