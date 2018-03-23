@@ -39,7 +39,7 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 	MyContent myContent = MyContent.getInstance();
 	String[] content;
 	String[] queIDS;
-	static int onlyOne = 0;
+	static int onlyOne = 0, onlyTwo = 0;
 	static int num = 0;
 	static int prenum = 0;
 	int time = 30;
@@ -68,6 +68,7 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 	private RadioButton question_ButtonB;
 	private RadioButton question_ButtonC;
 	private RadioButton question_ButtonD;
+	SharedPreferences preferences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +81,8 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 		tintManager.setStatusBarTintEnabled(true);
 		tintManager.setStatusBarTintResource(R.color.mywhite);
 		Intent intent = getIntent();
-		final Bundle bundle = intent.getExtras();
-		myTel = bundle.getString("tel");
+		preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
+		myTel = preferences.getString("tel", "");
 		matchbutton = (Button) findViewById(R.id.ladder_matchbutton);
 		matchbutton.setOnClickListener(this);
 		// 显示排名
@@ -116,15 +117,17 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 				}
 			}
 			if (msg.what == 0x122) {
-				new SweetAlertDialog(LadderActivity.this, SweetAlertDialog.SUCCESS_TYPE).setTitleText("匹配成功")
-						.setContentText("您的对手是:" + enemyName).show();
+				if (onlyTwo < 1) {
+					new SweetAlertDialog(LadderActivity.this, SweetAlertDialog.SUCCESS_TYPE).setTitleText("匹配成功")
+							.setContentText("您的对手是:" + enemyName).show();
+					onlyTwo++;
+				}
 			}
 			if (msg.what == 0x123) {
 				if (num < 1) {
 					num++;
 					setContentView(R.layout.activity_pkquestion);
 					setPkQuestion();
-
 				}
 			}
 			if (msg.what == 0x124) {
@@ -145,15 +148,14 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 					if (myReady) {
 						// 我也做好了
 						if (num == 10) {
+							socketServer.write("remove");
 							timehandler.removeMessages(1);
 							final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
 									Intent intent = new Intent(LadderActivity.this, IndexActivity.class);
-									Intent intent2 = getIntent();
-									final Bundle bundle = intent2.getExtras();
-									intent.putExtras(bundle);
 									startActivity(intent);
+									LadderActivity.this.finish();
 								}
 							};
 							// 已经是最后一题了，显示成绩
@@ -239,11 +241,10 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 					if (content[1].equals("noothermatch")) {
 						handler.sendEmptyMessage(0x121);
 					}
-					if (content[1].startsWith("tel")) {
+					if (content[1].equals("tel")) {
 						enemyTel = content[2];
 						enemyName = content[3];
 						handler.sendEmptyMessage(0x122);
-						myContent.setIfReady(false);
 					}
 					if (content[1].equals("queID")) {
 						queIDS = content[2].split("-");
@@ -305,7 +306,6 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 			} else {
 				confirmMyQue(false);
 			}
-
 			break;
 		case R.id.pk_question_ButtonD:
 			question_ButtonA.setClickable(false);
@@ -350,8 +350,7 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 		question_ButtonD.setOnClickListener(this);
 		pk_enemy_name.setText("敌人：" + enemyName);
 		Intent intent = getIntent();
-		final Bundle bundle = intent.getExtras();
-		pk_my_name.setText("我：" + bundle.getString("name"));
+		pk_my_name.setText("我：" + preferences.getString("name", ""));
 		setQuestion = new SetQuestion(getApplicationContext());
 		setQuestion(Integer.parseInt(queIDS[num - 1]));
 
@@ -401,13 +400,11 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 				// 敌人也做好了
 				if (num == 10) {
 					timehandler.removeMessages(1);
+					socketServer.write("remove");
 					final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(LadderActivity.this, IndexActivity.class);
-							Intent intent2 = getIntent();
-							final Bundle bundle = intent2.getExtras();
-							intent.putExtras(bundle);
 							startActivity(intent);
 							LadderActivity.this.finish();
 						}

@@ -26,8 +26,8 @@
         android:id="@+id/ladder_2"
         style="@style/usertext"
         android:layout_below="@+id/ladder_1"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="15dp"
         android:layout_toLeftOf="@+id/ladder_1"
         android:text="2"
         android:textSize="15sp" />
@@ -36,7 +36,7 @@
         android:id="@+id/ladder_3"
         style="@style/usertext"
         android:layout_below="@+id/ladder_1"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginTop="20dp"
         android:layout_toRightOf="@+id/ladder_1"
         android:text="3"
@@ -67,13 +67,14 @@
         android:layout_below="@+id/ladder_rank"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="110dp"
-        android:background="@drawable/makesure" />
+        android:background="@drawable/startpk" />
 
     <TextView
         android:id="@+id/ladder_textView2"
         style="@style/usertext"
         android:layout_below="@+id/ladder_matchbutton"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:text="开始排位"
         android:textSize="15sp" />
 

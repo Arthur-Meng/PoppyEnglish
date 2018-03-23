@@ -13,14 +13,21 @@
         android:text="每日一句"
         android:textSize="20sp" />
 
+    <ImageView  
+        android:id="@+id/bing"
+        android:layout_centerHorizontal="true"
+        android:layout_width="320dp"
+        android:layout_height="240dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/head" />
+
     <TextView
         android:id="@+id/oneday_textView2"
         style="@style/usertext"
-        android:layout_below="@+id/oneday_textView1"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bing"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="40dp"
         android:text="英文："
         android:textSize="15sp" />
 
@@ -28,10 +35,9 @@
         android:id="@+id/oneday_textView3"
         style="@style/usertext"
         android:layout_below="@+id/oneday_textView2"
-        android:layout_centerHorizontal="true"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="中文："
         android:textSize="15sp" />
 
@@ -41,7 +47,7 @@
         android:layout_height="70dp"
         android:layout_below="@+id/oneday_textView3"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="60dp"
         android:background="@drawable/share" />
 
 </RelativeLayout>

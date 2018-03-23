@@ -109,16 +109,8 @@ public class JggActivity extends Activity implements Button.OnClickListener {
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-			Intent intent = getIntent();
-			final Bundle bundle = intent.getExtras();
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {			
 			Intent toIndex = new Intent(JggActivity.this, IndexActivity.class);
-			if (bundle != null)
-				toIndex.putExtras(bundle);
-			else {
-				Bundle newbundle = new Bundle();
-				toIndex.putExtras(newbundle);
-			}
 			startActivity(toIndex);
 		}
 		return super.onKeyDown(keyCode, event);

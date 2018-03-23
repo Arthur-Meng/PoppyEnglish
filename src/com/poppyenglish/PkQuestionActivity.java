@@ -57,15 +57,14 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 	private RadioButton question_ButtonB;
 	private RadioButton question_ButtonC;
 	private RadioButton question_ButtonD;
-
+	SharedPreferences preferences;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pkquestion);
 		initview();
-		Intent intent = getIntent();
-		final Bundle bundle = intent.getExtras();
-		myTel = bundle.getString("tel");
+		preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
+		myTel = preferences.getString("tel", "");
 		thread.start();
 	}
 
@@ -128,9 +127,6 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
 									Intent intent = new Intent(PkQuestionActivity.this, IndexActivity.class);
-									Intent intent2 = getIntent();
-									final Bundle bundle = intent2.getExtras();
-									intent.putExtras(bundle);
 									startActivity(intent);
 								}
 							};
@@ -315,9 +311,7 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 		question_ButtonC.setOnClickListener(this);
 		question_ButtonD.setOnClickListener(this);
 		pk_enemy_name.setText("敌人：" + enemyName);
-		Intent intent = getIntent();
-		final Bundle bundle = intent.getExtras();
-		pk_my_name.setText("我：" + bundle.getString("name"));
+		pk_my_name.setText("我：" + preferences.getString("name", ""));
 		setQuestion = new SetQuestion(getApplicationContext());
 		setQuestion(Integer.parseInt(queIDS[num - 1]));
 	}
@@ -363,9 +357,6 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(PkQuestionActivity.this, IndexActivity.class);
-							Intent intent2 = getIntent();
-							final Bundle bundle = intent2.getExtras();
-							intent.putExtras(bundle);
 							startActivity(intent);
 							PkQuestionActivity.this.finish();
 						}

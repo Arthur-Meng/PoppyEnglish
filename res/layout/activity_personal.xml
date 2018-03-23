@@ -29,7 +29,7 @@
 
             <LinearLayout style="@style/top_layout" >
 
-                <Button
+                <ImageView
                     android:id="@+id/bt_perosnal_head"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -126,11 +126,11 @@
                 android:clickable="true" >
 
                 <Button
-                    android:id="@+id/perosnal_msginfo"
+                    android:id="@+id/perosnal_shareinfo"
                     style="@style/usertext"
                     android:background="@null"
                     android:gravity="left"
-                    android:text="消息通知" />
+                    android:text="探究圈" />
 
                 <ImageView style="@style/img_arrow" />
             </LinearLayout>

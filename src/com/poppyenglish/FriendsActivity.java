@@ -48,7 +48,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 	String enemyName;
 	String trueResult;
 	String[] newResult;
-	static int onlytwo = 0;
+	static int onlytwo = 0, onlythree = 0;
 	static int num = 0;
 	static int prenum = 0;
 
@@ -56,7 +56,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 	boolean enemyReady = false;
 	int my_score = 0;
 	int enemy_score = 0;
-
+	SharedPreferences preferences;
 	// PkQuestion
 	private TextView title;
 	private TextView questiontime;
@@ -92,8 +92,8 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 		searchfriend = (Button) findViewById(R.id.searchfriend);
 		searchfriend.setOnClickListener(this);
 		Intent intent = getIntent();
-		final Bundle bundle = intent.getExtras();
-		tel = bundle.getString("tel");
+		preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
+		tel = preferences.getString("tel", "");
 
 	}
 
@@ -385,7 +385,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 	}
 
 	public void pkfriend(String pktel) {
-		String msg = tel + ":match:" + pktel;
+		String msg = tel + ":friendmatch:" + pktel;
 		socketServer.write(msg);
 		thread.start();
 	}
@@ -406,11 +406,10 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 					if (content[1].equals("busy")) {
 						pkhandler.sendEmptyMessage(0x1214);
 					}
-					if (content[1].startsWith("tel")) {
+					if (content[1].equals("tel")) {
 						enemyTel = content[2];
 						enemyName = content[3];
 						pkhandler.sendEmptyMessage(0x122);
-						myContent.setIfReady(false);
 					}
 					if (content[1].equals("queID")) {
 						queIDS = content[2].split("-");
@@ -455,15 +454,16 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 				}
 			}
 			if (msg.what == 0x122) {
-				new SweetAlertDialog(FriendsActivity.this, SweetAlertDialog.SUCCESS_TYPE).setTitleText("匹配成功")
-						.setContentText("开始和好友" + enemyName + "来PK吧").show();
+				if (onlythree < 1) {
+					new SweetAlertDialog(FriendsActivity.this, SweetAlertDialog.SUCCESS_TYPE).setTitleText("匹配成功")
+							.setContentText("开始和好友" + enemyName + "来PK吧").show();
+				}
 			}
 			if (msg.what == 0x123) {
 				if (num < 1) {
 					num++;
 					setContentView(R.layout.activity_pkquestion);
 					setPkQuestion();
-
 				}
 			}
 			if (msg.what == 0x124) {
@@ -484,14 +484,13 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 					if (myReady) {
 						// 我也做好了
 						if (num == 10) {
+							socketServer.write("remove");
 							final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
 									Intent intent = new Intent(FriendsActivity.this, IndexActivity.class);
-									Intent intent2 = getIntent();
-									final Bundle bundle = intent2.getExtras();
-									intent.putExtras(bundle);
 									startActivity(intent);
+									FriendsActivity.this.finish();
 								}
 							};
 							// 已经是最后一题了，显示成绩
@@ -593,9 +592,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 		question_ButtonC.setOnClickListener(this);
 		question_ButtonD.setOnClickListener(this);
 		pk_enemy_name.setText("敌人：" + enemyName);
-		Intent intent = getIntent();
-		final Bundle bundle = intent.getExtras();
-		pk_my_name.setText("我：" + bundle.getString("name"));
+		pk_my_name.setText("我：" + preferences.getString("name", ""));
 		setQuestion = new SetQuestion(getApplicationContext());
 		setQuestion(Integer.parseInt(queIDS[num - 1]));
 	}
@@ -637,13 +634,11 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 			if (enemyReady) {
 				// 敌人也做好了
 				if (num == 10) {
+					socketServer.write("remove");
 					final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(FriendsActivity.this, IndexActivity.class);
-							Intent intent2 = getIntent();
-							final Bundle bundle = intent2.getExtras();
-							intent.putExtras(bundle);
 							startActivity(intent);
 							FriendsActivity.this.finish();
 						}

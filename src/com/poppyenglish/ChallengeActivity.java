@@ -143,15 +143,7 @@ public class ChallengeActivity extends Activity implements Button.OnClickListene
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-			Intent intent = getIntent();
-			final Bundle bundle = intent.getExtras();
 			Intent toIndex = new Intent(ChallengeActivity.this, IndexActivity.class);
-			if (bundle != null)
-				toIndex.putExtras(bundle);
-			else {
-				Bundle newbundle = new Bundle(); 
-				toIndex.putExtras(newbundle);
-			}
 			startActivity(toIndex);
 		}
 		return super.onKeyDown(keyCode, event);

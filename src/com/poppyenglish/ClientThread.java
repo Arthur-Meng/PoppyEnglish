@@ -23,11 +23,6 @@ public class ClientThread implements Runnable {
 			// 不断读取Socket输入流的内容
 			while (true) {
 				while ((content = br.readLine()) != null) {
-					// 每当读到来自服务器的数据之后，发送消息通知程序界面显示该数据
-					/*Message msg = new Message();
-					msg.what = 0x234;
-					msg.obj = content;
-					handler.sendMessage(msg);*/
 					MyContent myContent = MyContent.getInstance();
 					myContent.setIfReady(true);
 					myContent.setContentAll(content);

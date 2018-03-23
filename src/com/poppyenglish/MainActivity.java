@@ -41,24 +41,39 @@ public class MainActivity extends Activity {
 							startActivity(intent);
 							MainActivity.this.finish();
 						} else {
-							Bundle bundle = new Bundle();
-							bundle.putCharSequence("tel", preferences.getString("tel", ""));
-							bundle.putCharSequence("password", preferences.getString("tel", ""));
-							if (!preferences.getString("name", "").equals("")) {
-								bundle.putCharSequence("name", preferences.getString("name", ""));
+							if (!result[0].equals("")) {
+								if (!preferences.getString("name", "").equals(result[0])) {
+									SharedPreferences.Editor editor = preferences.edit();
+									editor.remove("name");
+									editor.putString("name", result[0]);
+									editor.commit();
+								}
 							}
-							if (!preferences.getString("gender", "").equals("")) {
-								bundle.putCharSequence("gender", preferences.getString("gender", ""));
+							if (!result[0].equals("")) {
+								if (!preferences.getString("gender", "").equals(result[1])) {
+									SharedPreferences.Editor editor = preferences.edit();
+									editor.remove("gender");
+									editor.putString("gender", result[1]);
+									editor.commit();
+								}
 							}
-							if (!preferences.getString("honor", "").equals("")) {
-								bundle.putCharSequence("honor", preferences.getString("honor", ""));
+							if (!result[0].equals("")) {
+								if (!preferences.getString("honor", "").equals(result[2])) {
+									SharedPreferences.Editor editor = preferences.edit();
+									editor.remove("honor");
+									editor.putString("honor", result[2]);
+									editor.commit();
+								}
 							}
-							if (preferences.getString("comment", "") != null) {
-								bundle.putCharSequence("comment", preferences.getString("comment", ""));
+							if (!result[0].equals("")) {
+								if (!preferences.getString("comment", "").equals(result[3])) {
+									SharedPreferences.Editor editor = preferences.edit();
+									editor.remove("comment");
+									editor.putString("comment", result[3]);
+									editor.commit();
+								}
 							}
-
 							Intent intent = new Intent(MainActivity.this, IndexActivity.class);
-							intent.putExtras(bundle);
 							startActivity(intent);
 						}
 					} else {

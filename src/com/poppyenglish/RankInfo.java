@@ -12,9 +12,6 @@ public class RankInfo {
 
 	public String[] rank(final String user) {
 		Thread thread = new Thread() {
-			// String strUrl =
-			// "http://www.arthurmeng.cn/PoppyEnglish/login?tel=" + user + "&" +
-			// "password=" + pwd;
 			String strUrl = "http://192.168.191.1/PoppyEnglish/rank?tel=" + user;
 			URL url = null;
 

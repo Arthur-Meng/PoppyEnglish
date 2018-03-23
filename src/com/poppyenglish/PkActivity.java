@@ -21,7 +21,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-
 public class PkActivity extends Activity implements Button.OnClickListener {
 
 	SocketServer socketServer = SocketServer.getInstance();
@@ -32,12 +31,12 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 	boolean enemyReady = false;
 	int my_score = 0;
 	int enemy_score = 0;
-	GifView gf2;
+	GifView gf1, gf2;
 	final HonorChange honorChange = new HonorChange();
 	MyContent myContent = MyContent.getInstance();
 	String[] content;
 	String[] queIDS;
-	static int onlyOne = 0;
+	static int onlyOne = 0, onlyTwo = 0;
 	static int num = 0;
 	static int prenum = 0;
 	String result;
@@ -60,6 +59,7 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 	private RadioButton question_ButtonB;
 	private RadioButton question_ButtonC;
 	private RadioButton question_ButtonD;
+	SharedPreferences preferences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +71,21 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
 		tintManager.setStatusBarTintResource(R.color.mywhite);
-		Intent intent = getIntent();
-		final Bundle bundle = intent.getExtras();
-		myTel = bundle.getString("tel");
+		preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
+		myTel = preferences.getString("tel", "");
+		
 		matchbutton = (Button) findViewById(R.id.matchbutton);
 		matchbutton.setOnClickListener(this);
-
+		
+		gf1 = (GifView) findViewById(R.id.gifmove);
+		// 设置Gif图片源
+		gf1.setGifImage(R.drawable.move);
+		// 设置显示的大小，拉伸或者压缩
+		DisplayMetrics dMetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dMetrics);
+		gf1.setShowDimension((int) (dMetrics.widthPixels), (int) (dMetrics.widthPixels));
+		// 设置加载方式：先加载后显示、边加载边显示、只显示第一帧再显示
+		gf1.setGifImageType(GifImageType.COVER);
 	}
 
 	@TargetApi(19)
@@ -104,15 +113,17 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 				}
 			}
 			if (msg.what == 0x122) {
-				new SweetAlertDialog(PkActivity.this, SweetAlertDialog.SUCCESS_TYPE).setTitleText("匹配成功")
-						.setContentText("您的对手是:" + enemyName).show();
+				if (onlyTwo < 1) {
+					new SweetAlertDialog(PkActivity.this, SweetAlertDialog.SUCCESS_TYPE).setTitleText("匹配成功")
+							.setContentText("您的对手是:" + enemyName).show();
+					onlyTwo++;
+				}
 			}
 			if (msg.what == 0x123) {
 				if (num < 1) {
 					num++;
 					setContentView(R.layout.activity_pkquestion);
 					setPkQuestion();
-
 				}
 			}
 			if (msg.what == 0x124) {
@@ -133,14 +144,13 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 					if (myReady) {
 						// 我也做好了
 						if (num == 10) {
+							socketServer.write("remove");
 							final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
-									Intent intent = new Intent(PkActivity.this, IndexActivity.class);
-									Intent intent2 = getIntent();
-									final Bundle bundle = intent2.getExtras();
-									intent.putExtras(bundle);
+									Intent intent = new Intent(PkActivity.this, IndexActivity.class);		
 									startActivity(intent);
+									PkActivity.this.finish();
 								}
 							};
 							// 已经是最后一题了，显示成绩
@@ -164,7 +174,7 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 															.setConfirmClickListener(listener).show();
 												}
 											}
-										}).show();	
+										}).show();
 
 							} else if (my_score < enemy_score) {
 								new SweetAlertDialog(PkActivity.this, SweetAlertDialog.ERROR_TYPE).setTitleText("失败！")
@@ -220,11 +230,10 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 					if (content[1].equals("noothermatch")) {
 						handler.sendEmptyMessage(0x121);
 					}
-					if (content[1].startsWith("tel")) {
+					if (content[1].equals("tel")) {
 						enemyTel = content[2];
 						enemyName = content[3];
 						handler.sendEmptyMessage(0x122);
-						myContent.setIfReady(false);
 					}
 					if (content[1].equals("queID")) {
 						queIDS = content[2].split("-");
@@ -250,7 +259,7 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 		case R.id.matchbutton:
 			String msg = myTel + ":match";
 			socketServer.write(msg);
-			showGif();
+			// showGif();
 			new SweetAlertDialog(PkActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE).setTitleText("正在匹配")
 					.setContentText("亲，请耐心等待~").show();
 			thread.start();
@@ -329,6 +338,7 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 
 		title = (TextView) findViewById(R.id.pk_questiontitle);
 		questiontime = (TextView) findViewById(R.id.pk_questiontime);
+		questiontime.setText("  ");
 		pk_enemy_name = (TextView) findViewById(R.id.pk_enemy_name);
 		pk_enemy_score = (TextView) findViewById(R.id.pk_enemy_score);
 		pk_enemy_now = (TextView) findViewById(R.id.pk_enemy_now);
@@ -346,8 +356,8 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 		question_ButtonD.setOnClickListener(this);
 		pk_enemy_name.setText("敌人：" + enemyName);
 		Intent intent = getIntent();
-		final Bundle bundle = intent.getExtras();
-		pk_my_name.setText("我：" + bundle.getString("name"));
+		
+		pk_my_name.setText("我：" + preferences.getString("name", ""));
 		setQuestion = new SetQuestion(getApplicationContext());
 		setQuestion(Integer.parseInt(queIDS[num - 1]));
 	}
@@ -389,13 +399,11 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 			if (enemyReady) {
 				// 敌人也做好了
 				if (num == 10) {
+					socketServer.write("remove");
 					final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(PkActivity.this, IndexActivity.class);
-							Intent intent2 = getIntent();
-							final Bundle bundle = intent2.getExtras();
-							intent.putExtras(bundle);
 							startActivity(intent);
 							PkActivity.this.finish();
 						}
