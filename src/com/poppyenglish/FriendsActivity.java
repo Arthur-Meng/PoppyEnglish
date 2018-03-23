@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.squareup.picasso.Picasso;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -24,6 +26,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -344,6 +347,9 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 			}
 		};
 		friends_pk.setOnClickListener(pklistener);
+		ImageView friends_head = (ImageView) userLayout.findViewById(R.id.friends_head);
+		Picasso.with(getApplicationContext()).load("http://192.168.191.1/PoppyEnglish/../Pic/" + removetel + ".jpg")
+				.into(friends_head);
 		TextView friends_user_name = (TextView) userLayout.findViewById(R.id.friends_user_name);
 		friends_user_name.setText(name);
 		TextView friends_user_level = (TextView) userLayout.findViewById(R.id.friends_user_level);
@@ -374,6 +380,9 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 				pkfriend(addtel);
 			}
 		};
+		ImageView friends_head = (ImageView) userLayout.findViewById(R.id.friends_head);
+		Picasso.with(getApplicationContext()).load("http://192.168.191.1/PoppyEnglish/../Pic/" + addtel + ".jpg")
+				.into(friends_head);
 		friends_pk.setOnClickListener(pklistener);
 		TextView friends_user_name = (TextView) userLayout.findViewById(R.id.friends_user_name);
 		friends_user_name.setText(name);

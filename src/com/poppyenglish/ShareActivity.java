@@ -1,6 +1,7 @@
 package com.poppyenglish;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.squareup.picasso.Picasso;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -41,9 +43,10 @@ public class ShareActivity extends Activity {
 			ShareURL shareURL = new ShareURL();
 			shareInfo = shareURL.getinfo(tel);
 		}
-		for (int i = 0; i < shareInfo.length / 4; i += 4) {
+		for (int i = 0; i < shareInfo.length; i += 5) {
 			if (null != shareInfo[i] && !shareInfo[i].equals("")) {
-				show(shareInfo[i], shareInfo[i + 1].substring(0, 19), shareInfo[i + 2], shareInfo[i + 3]);
+				show(shareInfo[i], shareInfo[i + 1], shareInfo[i + 2].substring(0, 19), shareInfo[i + 3],
+						shareInfo[i + 4]);
 			} else {
 				break;
 			}
@@ -82,11 +85,12 @@ public class ShareActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void show(final String name, String time, String number, String up) {
+	public void show(final String name, String showtel, String time, String number, String up) {
 		LinearLayout relative = (LinearLayout) findViewById(R.id.showshare);
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View sharequestion = layoutInflater.inflate(R.layout.sharequestion, null);
-
+		ImageView share_head = (ImageView) sharequestion.findViewById(R.id.share_head);
+		Picasso.with(getApplicationContext()).load("http://192.168.191.1/PoppyEnglish/../Pic/" + showtel + ".jpg").into(share_head);
 		TextView share_name = (TextView) sharequestion.findViewById(R.id.share_name);
 		share_name.setText(name);
 		TextView share_time = (TextView) sharequestion.findViewById(R.id.share_time);

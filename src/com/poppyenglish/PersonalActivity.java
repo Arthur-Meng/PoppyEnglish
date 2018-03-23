@@ -303,8 +303,7 @@ public class PersonalActivity extends Activity implements Button.OnClickListener
 			if (null != data) {
 				Bundle bundle = data.getExtras();
 				Bitmap bitmap = bundle.getParcelable("data");
-				Drawable drawable = new BitmapDrawable(bitmap);// 转换成drawable
-				bt_perosnal_head.setBackgroundDrawable(drawable);
+				bt_perosnal_head.setImageBitmap(bitmap);
 				photoUtils.setPictureToImageView(data, true);
 			}
 			break;
@@ -312,8 +311,7 @@ public class PersonalActivity extends Activity implements Button.OnClickListener
 			if (null != data) {
 				Bundle bundle = data.getExtras();
 				Bitmap bitmap = bundle.getParcelable("data");
-				Drawable drawable = new BitmapDrawable(bitmap);// 转换成drawable
-				bt_perosnal_head.setBackgroundDrawable(drawable);
+				bt_perosnal_head.setImageBitmap(bitmap);
 				photoUtils.setPictureToImageView(data, false);
 			}
 			break;

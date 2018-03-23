@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ShareURL {
-	static String[] shareinfo=new String[100];
+	static String[] shareinfo=new String[500];
 	static String addinfo = null;
 
 	public String[] getinfo(final String user) {

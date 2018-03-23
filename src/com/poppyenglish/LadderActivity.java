@@ -3,6 +3,8 @@ package com.poppyenglish;
 import com.ant.liao.GifView;
 import com.ant.liao.GifView.GifImageType;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.squareup.picasso.Picasso;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -504,6 +507,9 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 	}
 
 	public void showRankInfo() {
+		ImageView ladder_1_head = (ImageView) findViewById(R.id.ladder_1_head);
+		ImageView ladder_2_head = (ImageView) findViewById(R.id.ladder_2_head);
+		ImageView ladder_3_head = (ImageView) findViewById(R.id.ladder_3_head);
 		ladder_1 = (TextView) findViewById(R.id.ladder_1);
 		ladder_2 = (TextView) findViewById(R.id.ladder_2);
 		ladder_3 = (TextView) findViewById(R.id.ladder_3);
@@ -513,12 +519,18 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 		}
 		if (null != rankInfo[1] && !rankInfo[1].equals("")) {
 			ladder_1.setText(rankInfo[1]);
+			Picasso.with(getApplicationContext())
+					.load("http://192.168.191.1/PoppyEnglish/../Pic/" + rankInfo[2] + ".jpg").into(ladder_1_head);
 		}
 		if (null != rankInfo[3] && !rankInfo[3].equals("")) {
 			ladder_2.setText(rankInfo[3]);
+			Picasso.with(getApplicationContext())
+					.load("http://192.168.191.1/PoppyEnglish/../Pic/" + rankInfo[4] + ".jpg").into(ladder_2_head);
 		}
 		if (null != rankInfo[5] && !rankInfo[5].equals("")) {
 			ladder_3.setText(rankInfo[5]);
+			Picasso.with(getApplicationContext())
+					.load("http://192.168.191.1/PoppyEnglish/../Pic/" + rankInfo[6] + ".jpg").into(ladder_3_head);
 		}
 	}
 

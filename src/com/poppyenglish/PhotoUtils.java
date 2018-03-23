@@ -20,17 +20,19 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class PhotoUtils {
 	File tempFile;
 	Handler mHandler;
-	ProgressDialog progressDialog;
+	SweetAlertDialog progressDialog;
 	AlertDialog.Builder dialog;
 	Activity activity;
 	int PHOTO_CAMERA = 0;
@@ -50,13 +52,10 @@ public class PhotoUtils {
 	}
 
 	public void getProgressDialog(Activity activity) {
-		progressDialog = new ProgressDialog(activity);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置进度条的形式为圆形转动的进度条
-		progressDialog.setCancelable(true);// 设置是否可以通过点击Back键取消
-		progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
-		// 设置提示的title的图标，默认是没有的，如果没有设置title的话只设置Icon是不会显示图标的
-		progressDialog.setTitle("上传ing");
-
+		progressDialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
+		progressDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+		progressDialog.setTitleText("Loading");
+		progressDialog.setCancelable(false);
 	}
 
 	/**
@@ -88,8 +87,10 @@ public class PhotoUtils {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if (msg.arg1 > 0)
-					progressDialog.setProgress(msg.arg1);// 更新进度条
+				if (msg.arg1 > 0){
+					//不取消dialog
+				}
+
 			}
 		};
 		dialog = new AlertDialog.Builder(activity).setTitle(title).setItems(items, dialogListener);

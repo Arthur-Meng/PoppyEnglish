@@ -13,31 +13,59 @@
         android:text="天梯排行"
         android:textSize="20sp" />
 
+    <ImageView
+        android:id="@+id/ladder_1_head"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_below="@+id/ladder_textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="75dp"
+        android:background="@drawable/head" />
+
     <TextView
         android:id="@+id/ladder_1"
         style="@style/usertext"
-        android:layout_below="@+id/ladder_textView1"
+        android:layout_below="@+id/ladder_1_head"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="125dp"
+        android:layout_marginTop="5dp"
         android:text="1"
         android:textSize="15sp" />
+
+    <ImageView
+        android:id="@+id/ladder_2_head"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_below="@+id/ladder_1_head"
+        android:layout_toLeftOf="@+id/ladder_1_head"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="-35dp"
+        android:background="@drawable/head" />
 
     <TextView
         android:id="@+id/ladder_2"
         style="@style/usertext"
         android:layout_below="@+id/ladder_1"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/ladder_1"
         android:text="2"
         android:textSize="15sp" />
 
+     <ImageView
+        android:id="@+id/ladder_3_head"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_below="@+id/ladder_1_head"
+        android:layout_toRightOf="@+id/ladder_1_head"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="-20dp"
+        android:background="@drawable/head" />
     <TextView
         android:id="@+id/ladder_3"
         style="@style/usertext"
         android:layout_below="@+id/ladder_1"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_toRightOf="@+id/ladder_1"
         android:text="3"
         android:textSize="15sp" />
