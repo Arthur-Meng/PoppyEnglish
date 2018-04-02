@@ -73,10 +73,10 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 		tintManager.setStatusBarTintResource(R.color.mywhite);
 		preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
 		myTel = preferences.getString("tel", "");
-		
+
 		matchbutton = (Button) findViewById(R.id.matchbutton);
 		matchbutton.setOnClickListener(this);
-		
+
 		gf1 = (GifView) findViewById(R.id.gifmove);
 		// 设置Gif图片源
 		gf1.setGifImage(R.drawable.move);
@@ -101,7 +101,7 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 		win.setAttributes(winParams);
 	}
 
-	Handler handler = new Handler() {
+	Handler pkHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -148,7 +148,7 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 							final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
-									Intent intent = new Intent(PkActivity.this, IndexActivity.class);		
+									Intent intent = new Intent(PkActivity.this, IndexActivity.class);
 									startActivity(intent);
 									PkActivity.this.finish();
 								}
@@ -220,7 +220,7 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 			}
 		}
 	};
-	Thread thread = new Thread() {
+	Thread pkThread = new Thread() {
 		public Boolean ifStop = false;
 
 		public void run() {
@@ -228,23 +228,28 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 				if (myContent.getIfReady().equals(true)) {
 					content = myContent.getContent();
 					if (content[1].equals("noothermatch")) {
-						handler.sendEmptyMessage(0x121);
+						pkHandler.sendEmptyMessage(0x121);
 					}
 					if (content[1].equals("tel")) {
 						enemyTel = content[2];
 						enemyName = content[3];
-						handler.sendEmptyMessage(0x122);
+						pkHandler.sendEmptyMessage(0x122);
 					}
 					if (content[1].equals("queID")) {
-						queIDS = content[2].split("-");
-						handler.sendEmptyMessage(0x123);
+						if (null == enemyTel || null == enemyName) {
+							new SweetAlertDialog(PkActivity.this, SweetAlertDialog.ERROR_TYPE).setTitleText("正在匹配")
+									.setContentText("亲，异常错误，请重启客户端~").show();
+						} else {
+							queIDS = content[2].split("-");
+							pkHandler.sendEmptyMessage(0x123);
+						}
 					}
 					if (content[1].equals("queNum")) {
 						result = content[2];
 						newResult = result.split("-");
 						if (prenum + 1 == Integer.parseInt(newResult[0])) {
 							prenum++;
-							handler.sendEmptyMessage(0x124);
+							pkHandler.sendEmptyMessage(0x124);
 						}
 					}
 				}
@@ -252,6 +257,7 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 		}
 	};
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -262,7 +268,9 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 			// showGif();
 			new SweetAlertDialog(PkActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE).setTitleText("正在匹配")
 					.setContentText("亲，请耐心等待~").show();
-			thread.start();
+			if (false == pkThread.isAlive()) {
+				pkThread.start();
+			}
 			break;
 		case R.id.pk_question_ButtonA:
 			question_ButtonB.setClickable(false);
@@ -356,7 +364,7 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 		question_ButtonD.setOnClickListener(this);
 		pk_enemy_name.setText("敌人：" + enemyName);
 		Intent intent = getIntent();
-		
+
 		pk_my_name.setText("我：" + preferences.getString("name", ""));
 		setQuestion = new SetQuestion(getApplicationContext());
 		setQuestion(Integer.parseInt(queIDS[num - 1]));
@@ -401,11 +409,12 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 				if (num == 10) {
 					socketServer.write("remove");
 					final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
+						@SuppressWarnings("deprecation")
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(PkActivity.this, IndexActivity.class);
-							startActivity(intent);
 							PkActivity.this.finish();
+							startActivity(intent);
 						}
 					};
 					// 已经是最后一题了，显示成绩

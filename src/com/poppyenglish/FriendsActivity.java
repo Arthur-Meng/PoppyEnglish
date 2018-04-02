@@ -8,6 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.PublicKey;
+
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.squareup.picasso.Picasso;
 
@@ -51,9 +53,9 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 	String enemyName;
 	String trueResult;
 	String[] newResult;
-	static int onlytwo = 0, onlythree = 0;
-	static int num = 0;
-	static int prenum = 0;
+	int onlytwo = 0, onlythree = 0;
+	int num = 0;
+	int prenum = 0;
 
 	boolean myReady = false;
 	boolean enemyReady = false;
@@ -81,7 +83,14 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 		setContentView(R.layout.activity_friends);
 		initView();
 		findfriends(2, tel);
+	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		// int全部初始化
+		onlytwo = 0;
+		onlythree = 0;
 	}
 
 	private void initView() {
@@ -393,13 +402,16 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 		relative.addView(userLayout);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void pkfriend(String pktel) {
 		String msg = tel + ":friendmatch:" + pktel;
 		socketServer.write(msg);
-		thread.start();
+		if (false == friendThread.isAlive()) {
+			friendThread.start();
+		}
 	}
 
-	Thread thread = new Thread() {
+	Thread friendThread = new Thread() {
 		public Boolean ifStop = false;
 
 		public void run() {
@@ -407,29 +419,29 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 				if (myContent.getIfReady().equals(true)) {
 					content = myContent.getContent();
 					if (content[1].equals("no")) {
-						pkhandler.sendEmptyMessage(0x1212);
+						friendhandler.sendEmptyMessage(0x1212);
 					}
 					if (content[1].equals("noonline")) {
-						pkhandler.sendEmptyMessage(0x1213);
+						friendhandler.sendEmptyMessage(0x1213);
 					}
 					if (content[1].equals("busy")) {
-						pkhandler.sendEmptyMessage(0x1214);
+						friendhandler.sendEmptyMessage(0x1214);
 					}
 					if (content[1].equals("tel")) {
 						enemyTel = content[2];
 						enemyName = content[3];
-						pkhandler.sendEmptyMessage(0x122);
+						friendhandler.sendEmptyMessage(0x122);
 					}
 					if (content[1].equals("queID")) {
 						queIDS = content[2].split("-");
-						pkhandler.sendEmptyMessage(0x123);
+						friendhandler.sendEmptyMessage(0x123);
 					}
 					if (content[1].equals("queNum")) {
 						result = content[2];
 						newResult = result.split("-");
 						if (prenum + 1 == Integer.parseInt(newResult[0])) {
 							prenum++;
-							pkhandler.sendEmptyMessage(0x124);
+							friendhandler.sendEmptyMessage(0x124);
 						}
 					}
 				}
@@ -437,7 +449,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 		}
 	};
 
-	Handler pkhandler = new Handler() {
+	Handler friendhandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -466,6 +478,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 				if (onlythree < 1) {
 					new SweetAlertDialog(FriendsActivity.this, SweetAlertDialog.SUCCESS_TYPE).setTitleText("匹配成功")
 							.setContentText("开始和好友" + enemyName + "来PK吧").show();
+					onlythree++;
 				}
 			}
 			if (msg.what == 0x123) {
@@ -495,11 +508,12 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 						if (num == 10) {
 							socketServer.write("remove");
 							final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
+								@SuppressWarnings("deprecation")
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
 									Intent intent = new Intent(FriendsActivity.this, IndexActivity.class);
-									startActivity(intent);
 									FriendsActivity.this.finish();
+									startActivity(intent);
 								}
 							};
 							// 已经是最后一题了，显示成绩
@@ -576,9 +590,7 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 	};
 
 	public void setPkQuestion() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			setTranslucentStatus(true);
-		}
+
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
 		tintManager.setStatusBarTintResource(R.color.mywhite);
@@ -648,8 +660,9 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(FriendsActivity.this, IndexActivity.class);
-							startActivity(intent);
 							FriendsActivity.this.finish();
+							startActivity(intent);
+
 						}
 					};
 					// 已经是最后一题了，显示成绩

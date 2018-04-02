@@ -22,7 +22,7 @@ public class IndexActivity extends Activity {
 	String[] content;
 	String myTel;
 	SharedPreferences preferences;
-	static int onlyOne = 0;
+	int onlyOne = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +101,19 @@ public class IndexActivity extends Activity {
 		});
 
 		socketServer.write("register:" + myTel);
-		thread.start();
+
+		if (false == indexThread.isAlive()) {
+			indexThread.start();
+		}
 	}
 
-	Thread thread = new Thread() {
+	@Override
+	public void onResume() {
+		super.onResume();
+		onlyOne = 0;
+	}
+
+	Thread indexThread = new Thread() {
 		public Boolean ifStop = false;
 
 		public void run() {
@@ -113,7 +122,7 @@ public class IndexActivity extends Activity {
 					content = myContent.getContent();
 					if (content[1].equals("ifpk")) {
 						if (onlyOne < 1) {
-							handler.sendEmptyMessage(0x121);
+							indexHandler.sendEmptyMessage(0x121);
 							onlyOne++;
 						}
 					}
@@ -122,7 +131,7 @@ public class IndexActivity extends Activity {
 		}
 	};
 
-	Handler handler = new Handler() {
+	Handler indexHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x121) {

@@ -108,7 +108,7 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 		win.setAttributes(winParams);
 	}
 
-	Handler handler = new Handler() {
+	Handler ladderHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -234,7 +234,7 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 			}
 		}
 	};
-	Thread thread = new Thread() {
+	Thread ladderThread = new Thread() {
 		public Boolean ifStop = false;
 
 		public void run() {
@@ -242,23 +242,23 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 				if (myContent.getIfReady().equals(true)) {
 					content = myContent.getContent();
 					if (content[1].equals("noothermatch")) {
-						handler.sendEmptyMessage(0x121);
+						ladderHandler.sendEmptyMessage(0x121);
 					}
 					if (content[1].equals("tel")) {
 						enemyTel = content[2];
 						enemyName = content[3];
-						handler.sendEmptyMessage(0x122);
+						ladderHandler.sendEmptyMessage(0x122);
 					}
 					if (content[1].equals("queID")) {
 						queIDS = content[2].split("-");
-						handler.sendEmptyMessage(0x123);
+						ladderHandler.sendEmptyMessage(0x123);
 					}
 					if (content[1].equals("queNum")) {
 						result = content[2];
 						newResult = result.split("-");
 						if (prenum + 1 == Integer.parseInt(newResult[0])) {
 							prenum++;
-							handler.sendEmptyMessage(0x124);
+							ladderHandler.sendEmptyMessage(0x124);
 						}
 					}
 				}
@@ -275,7 +275,10 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 			socketServer.write(msg);
 			new SweetAlertDialog(LadderActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE).setTitleText("正在匹配")
 					.setContentText("亲，请耐心等待~").show();
-			thread.start();
+			if (true == ladderThread.isAlive()) {
+				ladderThread.start();
+			}
+
 			break;
 		case R.id.pk_question_ButtonA:
 			question_ButtonB.setClickable(false);
@@ -408,8 +411,8 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(LadderActivity.this, IndexActivity.class);
-							startActivity(intent);
 							LadderActivity.this.finish();
+							startActivity(intent);
 						}
 					};
 					// 已经是最后一题了，显示成绩

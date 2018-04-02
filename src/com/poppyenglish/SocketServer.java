@@ -43,7 +43,6 @@ public class SocketServer {
 			}
 		};
 		thread.start();
-
 	}
 
 	public static SocketServer getInstance() {

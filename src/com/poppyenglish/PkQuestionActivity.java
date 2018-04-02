@@ -1,8 +1,6 @@
 package com.poppyenglish;
 
-
 import com.readystatesoftware.systembartint.SystemBarTintManager;
-
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -20,7 +18,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-
 public class PkQuestionActivity extends Activity implements Button.OnClickListener {
 
 	SocketServer socketServer = SocketServer.getInstance();
@@ -35,9 +32,9 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 	MyContent myContent = MyContent.getInstance();
 	String[] content;
 	String[] queIDS;
-	static int onlyOne = 0;
-	static int num = 0;
-	static int prenum = 0;
+	int onlyOne = 0;
+	int num = 0;
+	int prenum = 0;
 	String result;
 	String trueResult;
 	String[] newResult;
@@ -58,6 +55,8 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 	private RadioButton question_ButtonC;
 	private RadioButton question_ButtonD;
 	SharedPreferences preferences;
+	SweetAlertDialog dialog1, dialog2, dialog3, dialog4;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,13 +64,23 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 		initview();
 		preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
 		myTel = preferences.getString("tel", "");
-		thread.start();
+		if (false == pkQuestionThread.isAlive()) {
+			pkQuestionThread.start();
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		// int全部初始化
+		onlyOne = 0;
+		num = 0;
+		prenum = 0;
+		my_score = 0;
+		enemy_score = 0;
 	}
 
 	public void initview() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			setTranslucentStatus(true);
-		}
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
 		tintManager.setStatusBarTintResource(R.color.mywhite);
@@ -90,13 +99,14 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 		win.setAttributes(winParams);
 	}
 
-	Handler handler = new Handler() {
+	Handler pkQuestionHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x122) {
-				new SweetAlertDialog(PkQuestionActivity.this, SweetAlertDialog.SUCCESS_TYPE).setTitleText("匹配成功")
-						.setContentText("您的对手是:" + enemyName).show();
+				dialog1 = new SweetAlertDialog(PkQuestionActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+						.setTitleText("匹配成功").setContentText("您的对手是:" + enemyName);
+				dialog1.show();
 			}
 			if (msg.what == 0x123) {
 				if (num < 1) {
@@ -123,16 +133,19 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 					if (myReady) {
 						// 我也做好了
 						if (num == 10) {
+							socketServer.write("remove");
 							final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
 									Intent intent = new Intent(PkQuestionActivity.this, IndexActivity.class);
+									PkQuestionActivity.this.finish();
+									// thread.interrupt();
 									startActivity(intent);
 								}
 							};
 							// 已经是最后一题了，显示成绩
 							if (my_score > enemy_score) {
-								new SweetAlertDialog(PkQuestionActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+								dialog2 = new SweetAlertDialog(PkQuestionActivity.this, SweetAlertDialog.SUCCESS_TYPE)
 										.setTitleText("胜利！")
 										.setContentText("恭喜您以" + my_score + ":" + enemy_score + "战胜了" + enemyName + "!")
 										.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -153,10 +166,11 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 																	.setConfirmClickListener(listener).show();
 												}
 											}
-										}).show();
+										});
+								dialog2.show();
 
 							} else if (my_score < enemy_score) {
-								new SweetAlertDialog(PkQuestionActivity.this, SweetAlertDialog.ERROR_TYPE)
+								dialog3 = new SweetAlertDialog(PkQuestionActivity.this, SweetAlertDialog.ERROR_TYPE)
 										.setTitleText("失败！")
 										.setContentText(
 												"很遗憾，您以" + my_score + ":" + enemy_score + "惜败于" + enemyName + "!")
@@ -178,14 +192,15 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 																	.setConfirmClickListener(listener).show();
 												}
 											}
-										}).show();
+										});
+								dialog3.show();
 
 							} else {
-								new SweetAlertDialog(PkQuestionActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-										.setTitleText("战平！")
-										.setContentText(
+								dialog4 = new SweetAlertDialog(PkQuestionActivity.this,
+										SweetAlertDialog.CUSTOM_IMAGE_TYPE).setTitleText("战平！").setContentText(
 												"您以" + my_score + ":" + enemy_score + "与" + enemyName + "势均力敌，再接再厉！")
-										.setConfirmClickListener(listener).show();
+												.setConfirmClickListener(listener);
+								dialog4.show();
 							}
 						} else {
 							// 继续做题
@@ -201,7 +216,7 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 			}
 		}
 	};
-	Thread thread = new Thread() {
+	Thread pkQuestionThread = new Thread() {
 		public Boolean ifStop = false;
 
 		public void run() {
@@ -211,19 +226,24 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 					if (content[1].startsWith("tel")) {
 						enemyTel = content[2];
 						enemyName = content[3];
-						handler.sendEmptyMessage(0x122);
+						pkQuestionHandler.sendEmptyMessage(0x122);
 						myContent.setIfReady(false);
 					}
 					if (content[1].equals("queID")) {
-						queIDS = content[2].split("-");
-						handler.sendEmptyMessage(0x123);
+						if (null == enemyTel || null == enemyName) {
+							new SweetAlertDialog(PkQuestionActivity.this, SweetAlertDialog.ERROR_TYPE)
+									.setTitleText("正在匹配").setContentText("亲，异常错误，请重启客户端~").show();
+						} else {
+							queIDS = content[2].split("-");
+							pkQuestionHandler.sendEmptyMessage(0x123);
+						}
 					}
 					if (content[1].equals("queNum")) {
 						result = content[2];
 						newResult = result.split("-");
 						if (prenum + 1 == Integer.parseInt(newResult[0])) {
 							prenum++;
-							handler.sendEmptyMessage(0x124);
+							pkQuestionHandler.sendEmptyMessage(0x124);
 						}
 					}
 				}
@@ -353,12 +373,13 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 			if (enemyReady) {
 				// 敌人也做好了
 				if (num == 10) {
+					socketServer.write("remove");
 					final SweetAlertDialog.OnSweetClickListener listener = new SweetAlertDialog.OnSweetClickListener() {
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(PkQuestionActivity.this, IndexActivity.class);
-							startActivity(intent);
 							PkQuestionActivity.this.finish();
+							startActivity(intent);
 						}
 					};
 					// 已经是最后一题了，显示成绩
