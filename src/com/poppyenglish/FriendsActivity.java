@@ -91,6 +91,12 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 		// int全部初始化
 		onlytwo = 0;
 		onlythree = 0;
+		num = 0;
+		prenum = 0;
+		my_score = 0;
+		enemy_score = 0;
+		myReady = false;
+		enemyReady = false;
 	}
 
 	private void initView() {
@@ -512,7 +518,6 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
 									Intent intent = new Intent(FriendsActivity.this, IndexActivity.class);
-									FriendsActivity.this.finish();
 									startActivity(intent);
 								}
 							};
@@ -660,7 +665,6 @@ public class FriendsActivity extends Activity implements Button.OnClickListener 
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(FriendsActivity.this, IndexActivity.class);
-							FriendsActivity.this.finish();
 							startActivity(intent);
 
 						}

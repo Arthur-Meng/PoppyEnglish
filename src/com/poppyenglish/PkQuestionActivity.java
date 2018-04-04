@@ -78,6 +78,8 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 		prenum = 0;
 		my_score = 0;
 		enemy_score = 0;
+		myReady = false;
+		enemyReady = false;
 	}
 
 	public void initview() {
@@ -138,7 +140,6 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
 									Intent intent = new Intent(PkQuestionActivity.this, IndexActivity.class);
-									PkQuestionActivity.this.finish();
 									// thread.interrupt();
 									startActivity(intent);
 								}
@@ -378,7 +379,6 @@ public class PkQuestionActivity extends Activity implements Button.OnClickListen
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(PkQuestionActivity.this, IndexActivity.class);
-							PkQuestionActivity.this.finish();
 							startActivity(intent);
 						}
 					};

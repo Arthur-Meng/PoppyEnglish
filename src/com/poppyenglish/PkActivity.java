@@ -36,9 +36,9 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 	MyContent myContent = MyContent.getInstance();
 	String[] content;
 	String[] queIDS;
-	static int onlyOne = 0, onlyTwo = 0;
-	static int num = 0;
-	static int prenum = 0;
+	int onlyOne = 0, onlyTwo = 0;
+	int num = 0;
+	int prenum = 0;
 	String result;
 	String trueResult;
 	String[] newResult;
@@ -88,6 +88,20 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 		gf1.setGifImageType(GifImageType.COVER);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		// int全部初始化
+		my_score = 0;
+		enemy_score = 0;
+		onlyOne = 0;
+		onlyTwo = 0;
+		num = 0;
+		prenum = 0;
+		myReady = false;
+		enemyReady = false;
+	}
+	
 	@TargetApi(19)
 	private void setTranslucentStatus(boolean on) {
 		Window win = getWindow();
@@ -150,7 +164,6 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 								public void onClick(SweetAlertDialog sDialog) {
 									Intent intent = new Intent(PkActivity.this, IndexActivity.class);
 									startActivity(intent);
-									PkActivity.this.finish();
 								}
 							};
 							// 已经是最后一题了，显示成绩
@@ -266,8 +279,8 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 			String msg = myTel + ":match";
 			socketServer.write(msg);
 			// showGif();
-			new SweetAlertDialog(PkActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE).setTitleText("正在匹配")
-					.setContentText("亲，请耐心等待~").show();
+			/*new SweetAlertDialog(PkActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE).setTitleText("正在匹配")
+					.setContentText("亲，请耐心等待~").show();*/
 			if (false == pkThread.isAlive()) {
 				pkThread.start();
 			}
@@ -413,7 +426,6 @@ public class PkActivity extends Activity implements Button.OnClickListener {
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(PkActivity.this, IndexActivity.class);
-							PkActivity.this.finish();
 							startActivity(intent);
 						}
 					};

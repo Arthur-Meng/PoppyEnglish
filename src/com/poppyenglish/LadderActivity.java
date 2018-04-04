@@ -42,9 +42,9 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 	MyContent myContent = MyContent.getInstance();
 	String[] content;
 	String[] queIDS;
-	static int onlyOne = 0, onlyTwo = 0;
-	static int num = 0;
-	static int prenum = 0;
+	int onlyOne = 0, onlyTwo = 0;
+	int num = 0;
+	int prenum = 0;
 	int time = 30;
 	String result;
 	String trueResult;
@@ -95,6 +95,20 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		// int全部初始化
+		my_score = 0;
+		enemy_score = 0;
+		onlyOne = 0;
+		onlyTwo = 0;
+		num = 0;
+		prenum = 0;
+		myReady = false;
+		enemyReady = false;
+	}
+	
 	@TargetApi(19)
 	private void setTranslucentStatus(boolean on) {
 		Window win = getWindow();
@@ -158,7 +172,6 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 								public void onClick(SweetAlertDialog sDialog) {
 									Intent intent = new Intent(LadderActivity.this, IndexActivity.class);
 									startActivity(intent);
-									LadderActivity.this.finish();
 								}
 							};
 							// 已经是最后一题了，显示成绩
@@ -411,7 +424,6 @@ public class LadderActivity extends Activity implements Button.OnClickListener {
 						@Override
 						public void onClick(SweetAlertDialog sDialog) {
 							Intent intent = new Intent(LadderActivity.this, IndexActivity.class);
-							LadderActivity.this.finish();
 							startActivity(intent);
 						}
 					};
